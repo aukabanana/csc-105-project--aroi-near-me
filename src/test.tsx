@@ -1,4 +1,4 @@
-function test() {
+function Test() {
 
   return (
     <div className='grid grid-cols-3'>
@@ -37,4 +37,4 @@ function test() {
   )
 }
 
-export default test
+export default Test
