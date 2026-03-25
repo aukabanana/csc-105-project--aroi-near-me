@@ -1,4 +1,6 @@
 import NavBar from '../../components/layouts/NavBar'
+import Footer from '../../components/layouts/Footer'
+
 export default function MainPage() {
   return (
     <div className="bg-black text-white min-h-screen">
@@ -11,6 +13,7 @@ export default function MainPage() {
         <h1 className="text-3xl md:text-5xl mt-6 font-serif">
           Aroi Near Me
         </h1>
+
 
         <p className="text-red-500 mt-2 tracking-widest">
           JAPANESE FOOD
@@ -165,10 +168,8 @@ export default function MainPage() {
             </div>
         </div>
       </section>
-
-      <div className="mt-16 border-t border-gray-800 py-6 text-center text-gray-400">
-        Footer
-      </div>
+      
+        <Footer/>
 
     </div>
   )
