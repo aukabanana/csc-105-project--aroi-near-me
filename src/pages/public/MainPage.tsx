@@ -1,9 +1,153 @@
-import NavBar from '../../components/layouts/NavBar'
+import NavBar from '../../components/layouts/NavBar';
+import MenuCard, { type MenuCardProps } from '../../components/cards/MenuCards';
+import PromotionCard, {type ProCardProps}   from '../../components/cards/PromotionCard';
+import RestaurantCard, { type RestCardProps} from '../../components/cards/RestaurantCard';
+
+import sushi from '../../assets/img/mockCardImage/sushi.jpg';
+import dishSushi from '../../assets/img/mockCardImage/dish-sushi.jpg';
+import restJapan from '../../assets/img/background/restJapan.jpg';
+
+const proMenuCard: ProCardProps[] = [
+  {
+    image: sushi,
+    name: "Tonkotsu Ramen",
+    restName: "Sakura Kitchen",
+    desc: "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
+    price: 139,
+    originalPrice: 29,
+    discount: 78,
+    type: "Ramen",
+    timer: "11:42:12",
+    status: true,
+    admin: true
+  },
+  {
+    image: dishSushi,
+    name: "Takoyaki",
+    restName: "Sakura",
+    desc: "lorem lorem lorem lorem lorem lorem lorem",
+    price: 220,
+    originalPrice:0,
+    discount: 0,
+    type: "Sushi",
+    timer: "",
+    status: true,
+    admin: true
+  },
+  {
+  image: sushi,
+  name: "Salmon Nigiri",
+  restName: "Sakura Japanese Kitchen",
+  desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's . Lorem Ipsum has been the industry's. Lorem Ipsum has been the industry's",
+  price: 129,
+  originalPrice: 180,
+  discount: 26,
+  type: "Sushi",
+  timer: "12:11:04",
+  status: true,
+  admin: false
+  },
+  {
+    image: dishSushi,
+    name: "Nigiri",
+    restName: "Sakura Kitchen",
+    desc: "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
+    price: 220,
+    originalPrice: 0,
+    discount: 0,
+    type: "Sushi",
+    timer: "",
+    status: false,
+    admin: false
+  },
+]
+
+const menuCard: MenuCardProps[] = [
+  {
+    image: sushi,
+    name: "Salmon Nigiri",
+    restName: "Sakura Japanese Kitchen",
+    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's",
+    price: 129,
+    originalPrice: 0,
+    discount: 0,
+    type: "Sushi",
+    timer: "",
+    status: true,
+    admin: true
+  },
+  {
+    image: dishSushi,
+    name: "Nigiri",
+    restName: "Sakura Kitchen",
+    desc: "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
+    price: 220,
+    originalPrice: 0,
+    discount: 0,
+    type: "Sushi",
+    timer: "",
+    status: true,
+    admin: true
+  },
+  {
+    image: sushi,
+    name: "Tonkotsu Ramen",
+    restName: "Sakura Kitchen",
+    desc: "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
+    price: 139,
+    originalPrice: 0,
+    discount: 0,
+    type: "Ramen",
+    timer: "",
+    status: true,
+    admin: false
+  },
+  {
+    image: dishSushi,
+    name: "Takoyaki",
+    restName: "Sakura",
+    desc: "lorem lorem lorem lorem lorem lorem lorem",
+    price: 220,
+    originalPrice:0,
+    discount: 0,
+    type: "Sushi",
+    timer: "",
+    status: false,
+    admin: false
+  },
+]
+
+const restCard: RestCardProps[] = [
+  {
+    image: restJapan,
+    restName: "Japung Restau",
+    desc: "lorem lorem lorem lorem lorem lorem lorem lorem ",
+    admin: true,
+  },
+  {
+    image: restJapan,
+    restName: "Japung Restau",
+    desc: "lorem lorem lorem lorem lorem lorem lorem lorem ",
+    admin: true,
+  },
+  {
+    image: restJapan,
+    restName: "Japung Restau",
+    desc: "lorem lorem lorem lorem lorem lorem lorem lorem ",
+    admin: false,
+  },
+  {
+    image: restJapan,
+    restName: "Japung Restau",
+    desc: "lorem lorem lorem lorem lorem lorem lorem lorem ",
+    admin: false,
+  },
+]
+
 export default function MainPage() {
   return (
-    <div className="bg-black text-white min-h-screen">
+    <div className="bg-(--color-bg-default) text-(--color-text-primary) min-h-screen">
 
-      {/* Navbar */}
       <NavBar />
 
       <section className="flex flex-col items-center text-center mt-6 px-4">
@@ -42,62 +186,27 @@ export default function MainPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <div className='flex flex-col'>
-                <div className="h-60 bg-gray-700"></div>
-                <div className='h-40 bg-gray-900 p-3 flex flex-col gap-3'>
-                    <div className='gap-2 flex flex-col'>
-                        <h4 className='text-extrabold text-xl text-white'>Salmon Sushi set</h4>
-                        <p className='text-gray-400'>Happy Birthday, Enjoy your meal!</p>
-                    </div>
-                    <div className='w-full flex gap-3 justify-end'>
-                        <button className='border border-(--color-brand-primary) text-(--color-brand-primary) px-4 py-2 rounded-full'>delete</button>
-                        <button className='border border-(--color-brand-secondary) text-(--color-brand-secondary) px-4 py-2 rounded-full'>delete</button>
-                    </div>
-                </div>
-            </div>
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-3 lg:grid-cols-4 lg:gap-8">
 
-            <div className='flex flex-col'>
-                <div className="h-60 bg-gray-700"></div>
-                <div className='h-40 bg-gray-900 p-3 flex flex-col gap-3'>
-                    <div className='gap-2 flex flex-col'>
-                        <h4 className='text-extrabold text-xl text-white'>Salmon Sushi set</h4>
-                        <p className='text-gray-400'>Happy Birthday, Enjoy your meal!</p>
-                    </div>
-                    <div className='w-full flex gap-3 justify-end'>
-                        <button className='border border-(--color-brand-primary) text-(--color-brand-primary) px-4 py-2 rounded-full'>delete</button>
-                        <button className='border border-(--color-brand-secondary) text-(--color-brand-secondary) px-4 py-2 rounded-full'>delete</button>
-                    </div>
-                </div>
-            </div>
+            {proMenuCard.map((menu, i) => (
+            <PromotionCard key={i} {...menu} />
+            ))}
 
-            <div className='flex flex-col'>
-                <div className="h-60 bg-gray-700"></div>
-                <div className='h-40 bg-gray-900 p-3 flex flex-col gap-3'>
-                    <div className='gap-2 flex flex-col'>
-                        <h4 className='text-extrabold text-xl text-white'>Salmon Sushi set</h4>
-                        <p className='text-gray-400'>Happy Birthday, Enjoy your meal!</p>
-                    </div>
-                    <div className='w-full flex gap-3 justify-end'>
-                        <button className='border border-(--color-brand-primary) text-(--color-brand-primary) px-4 py-2 rounded-full'>delete</button>
-                        <button className='border border-(--color-brand-secondary) text-(--color-brand-secondary) px-4 py-2 rounded-full'>delete</button>
-                    </div>
-                </div>
-            </div>
+        </div>
+      </section>
 
-            <div className='flex flex-col'>
-                <div className="h-60 bg-gray-700"></div>
-                <div className='h-40 bg-gray-900 p-3 flex flex-col gap-3'>
-                    <div className='gap-2 flex flex-col'>
-                        <h4 className='text-extrabold text-xl text-white'>Salmon Sushi set</h4>
-                        <p className='text-gray-400'>Happy Birthday, Enjoy your meal!</p>
-                    </div>
-                    <div className='w-full flex gap-3 justify-end'>
-                        <button className='border border-(--color-brand-primary) text-(--color-brand-primary) px-4 py-2 rounded-full'>delete</button>
-                        <button className='border border-(--color-brand-secondary) text-(--color-brand-secondary) px-4 py-2 rounded-full'>delete</button>
-                    </div>
-                </div>
-            </div>
+      <section className="mt-12 px-6">
+
+        <h2 className="text-lg font-semibold mb-4">
+          Menu
+        </h2>
+
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-3 lg:grid-cols-4 lg:gap-8">
+            
+            {menuCard.map((menu, i) => (
+              <MenuCard key={i} {...menu} />
+            ))}
+
         </div>
       </section>
 
@@ -107,62 +216,12 @@ export default function MainPage() {
           Restaurant
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <div className='flex flex-col'>
-                <div className="h-60 bg-gray-700"></div>
-                <div className='h-40 bg-gray-900 p-3 flex flex-col gap-3'>
-                    <div className='gap-2 flex flex-col'>
-                        <h4 className='text-extrabold text-xl text-white'>Salmon Sushi set</h4>
-                        <p className='text-gray-400'>Happy Birthday, Enjoy your meal!</p>
-                    </div>
-                    <div className='w-full flex gap-3 justify-end'>
-                        <button className='border border-(--color-brand-primary) text-(--color-brand-primary) px-4 py-2 rounded-full'>delete</button>
-                        <button className='border border-(--color-brand-secondary) text-(--color-brand-secondary) px-4 py-2 rounded-full'>delete</button>
-                    </div>
-                </div>
-            </div>
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-3 lg:grid-cols-4 lg:gap-8">
+            
+            {restCard.map((menu, i) => (
+              <RestaurantCard key={i} {...menu} />
+            ))}
 
-            <div className='flex flex-col'>
-                <div className="h-60 bg-gray-700"></div>
-                <div className='h-40 bg-gray-900 p-3 flex flex-col gap-3'>
-                    <div className='gap-2 flex flex-col'>
-                        <h4 className='text-extrabold text-xl text-white'>Salmon Sushi set</h4>
-                        <p className='text-gray-400'>Happy Birthday, Enjoy your meal!</p>
-                    </div>
-                    <div className='w-full flex gap-3 justify-end'>
-                        <button className='border border-(--color-brand-primary) text-(--color-brand-primary) px-4 py-2 rounded-full'>delete</button>
-                        <button className='border border-(--color-brand-secondary) text-(--color-brand-secondary) px-4 py-2 rounded-full'>delete</button>
-                    </div>
-                </div>
-            </div>
-
-            <div className='flex flex-col'>
-                <div className="h-60 bg-gray-700"></div>
-                <div className='h-40 bg-gray-900 p-3 flex flex-col gap-3'>
-                    <div className='gap-2 flex flex-col'>
-                        <h4 className='text-extrabold text-xl text-white'>Salmon Sushi set</h4>
-                        <p className='text-gray-400'>Happy Birthday, Enjoy your meal!</p>
-                    </div>
-                    <div className='w-full flex gap-3 justify-end'>
-                        <button className='border border-(--color-brand-primary) text-(--color-brand-primary) px-4 py-2 rounded-full'>delete</button>
-                        <button className='border border-(--color-brand-secondary) text-(--color-brand-secondary) px-4 py-2 rounded-full'>delete</button>
-                    </div>
-                </div>
-            </div>
-
-            <div className='flex flex-col'>
-                <div className="h-60 bg-gray-700"></div>
-                <div className='h-40 bg-gray-900 p-3 flex flex-col gap-3'>
-                    <div className='gap-2 flex flex-col'>
-                        <h4 className='text-extrabold text-xl text-white'>Salmon Sushi set</h4>
-                        <p className='text-gray-400'>Happy Birthday, Enjoy your meal!</p>
-                    </div>
-                    <div className='w-full flex gap-3 justify-end'>
-                        <button className='border border-(--color-brand-primary) text-(--color-brand-primary) px-4 py-2 rounded-full'>delete</button>
-                        <button className='border border-(--color-brand-secondary) text-(--color-brand-secondary) px-4 py-2 rounded-full'>delete</button>
-                    </div>
-                </div>
-            </div>
         </div>
       </section>
 
