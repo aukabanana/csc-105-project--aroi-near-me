@@ -185,5 +185,10 @@ export default function MainPage() {
                 Footer
             </div>
         </div>
-    )
+      </section>
+      
+        <Footer/>
+
+    </div>
+  )
 }
