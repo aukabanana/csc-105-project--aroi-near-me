@@ -1,8 +1,14 @@
-import NavBar from '../../components/layouts/NavBar';
+import NavBar from '../../components/layouts/NavBar'
+import Logo from '../../components/layouts/Logo'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import PillSort from '../../components/ui/PillSort'
+import mainCover from '../../assets/images/Main.png'
+
 import MenuCard, { type MenuCardProps } from '../../components/cards/MenuCards';
 import PromotionCard, {type ProCardProps}   from '../../components/cards/PromotionCard';
 import RestaurantCard, { type RestCardProps} from '../../components/cards/RestaurantCard';
-
+//Mock data section
 import sushi from '../../assets/img/mockCardImage/sushi.jpg';
 import dishSushi from '../../assets/img/mockCardImage/dish-sushi.jpg';
 import restJapan from '../../assets/img/background/restJapan.jpg';
@@ -35,17 +41,17 @@ const proMenuCard: ProCardProps[] = [
     admin: true
   },
   {
-  image: sushi,
-  name: "Salmon Nigiri",
-  restName: "Sakura Japanese Kitchen",
-  desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's . Lorem Ipsum has been the industry's. Lorem Ipsum has been the industry's",
-  price: 129,
-  originalPrice: 180,
-  discount: 26,
-  type: "Sushi",
-  timer: "12:11:04",
-  status: true,
-  admin: false
+    image: sushi,
+    name: "Salmon Nigiri",
+    restName: "Sakura Japanese Kitchen",
+    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's . Lorem Ipsum has been the industry's. Lorem Ipsum has been the industry's",
+    price: 129,
+    originalPrice: 180,
+    discount: 26,
+    type: "Sushi",
+    timer: "12:11:04",
+    status: true,
+    admin: false
   },
   {
     image: dishSushi,
@@ -143,91 +149,91 @@ const restCard: RestCardProps[] = [
     admin: false,
   },
 ]
-
+ 
 export default function MainPage() {
-  return (
-    <div className="bg-(--color-bg-default) text-(--color-text-primary) min-h-screen">
+    return (
+        <div className='px-[clamp(20px,2.5vw,40px)] py-10 text-white min-h-screen bg-black'>
 
-      <NavBar />
-
-      <section className="flex flex-col items-center text-center mt-6 px-4">
-        <div className="w-full max-w-5xl h-56 md:h-72 bg-gray-700 rounded-xl" />
-        <h1 className="text-3xl md:text-5xl mt-6 font-serif">
-          Aroi Near Me
-        </h1>
-
-        <p className="text-red-500 mt-2 tracking-widest">
-          JAPANESE FOOD
-        </p>
-
-        <div className="mt-6 w-full max-w-xl">
-          <input
-            placeholder="Search the menu"
-            className="w-full bg-transparent border border-gray-600 rounded-full px-5 py-3 outline-none"
-          />
-        </div>
-        <div className="flex gap-3 mt-6 flex-wrap justify-center">
-            <button className='border border-white px-5 py-1 rounded-2xl '>All</button>
-            <button className='border border-white px-5 py-1 rounded-2xl '>Sushi</button>
-            <button className='border border-white px-5 py-1 rounded-2xl '>Donbuti</button>
-            <button className='border border-white px-5 py-1 rounded-2xl '>Ramen</button>
-            <button className='border border-white px-5 py-1 rounded-2xl '>Snack</button>
-            <button className='border border-white px-5 py-1 rounded-2xl '>Drink</button>
-        </div>
-      </section>
-
-      <section className="mt-10 px-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold">
-            Today's Promotion
-          </h2>
-          <div className="text-sm bg-gray-800 px-3 py-1 rounded-full">
-            Default
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-3 lg:grid-cols-4 lg:gap-8">
-
-            {proMenuCard.map((menu, i) => (
-            <PromotionCard key={i} {...menu} />
-            ))}
-
-        </div>
-      </section>
-
-      <section className="mt-12 px-6">
-
-        <h2 className="text-lg font-semibold mb-4">
-          Menu
-        </h2>
-
-        <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-3 lg:grid-cols-4 lg:gap-8">
+            <NavBar />
             
-            {menuCard.map((menu, i) => (
-              <MenuCard key={i} {...menu} />
-            ))}
+            <section className="relative flex flex-col items-center text-center px-4
+            bg-cover bg-center bg-no-repeat" style={{backgroundImage: `url(${mainCover})`}}>
 
+                {/* Overlay Background */}
+                <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-black"
+                style={{background: "linear-gradient(to bottom, rgba(0,0,0,0.15) 20%, rgba(0,0,0,0.9) 100%)"}}></div>
+
+                <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-black"
+                style={{background: "radial-gradient(ellipse at center, rgba(0,0,0,0.15) 20%, rgba(0,0,0,0.9) 100%)"}}></div>
+
+                <div className='relative z-20 flex flex-col items-center w-full'>
+                    <div className='flex flex-col justify-center'>
+                        <div className='mt-30 md:mt-40 lg:80'><Logo /></div>
+                        <p className="text-red-500 mt-2 tracking-widest text-sm md:text-lg font-['Tai_Heritage_Pro'] text-extrabold">
+                            JAPANESE FOOD
+                        </p>
+                    </div>
+
+                    <div className="flex flex-row gap-4 justify-center items-center 
+                    mt-8 border-[0.5px] w-45 md:w-85 lg:115 border-(--color-brand-secondary) rounded-lg md:rounded-xl px-[clamp(12px,2.5vw,20px)] py-[clamp(3px,1.5vw,9px)] text-xs bg-(--color-bg-surface)
+                    outline-none text-md md:text-xl">
+                        <FontAwesomeIcon icon={faMagnifyingGlass} className='text-(--color-brand-secondary)'/>
+                        <input
+                            placeholder="Search the menu"
+                            className="w-full
+                            outline-none focus:outline-none
+                            focus:border-transparent
+                            transition duration-200
+                            text-(--color-brand-secondary)
+                            cursor-type"
+                        />
+                    </div>
+                    <div className='w-full overflow-x-auto whitespace-nowrap no-scrollbar py-3'><PillSort /></div>
+                </div>
+            </section>
+
+            <section className="mt-10 px-4 md:px-8">
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-lg font-semibold">
+                        Today's Promotion
+                    </h2>
+                    <div className="text-sm bg-gray-800 px-3 py-1 rounded-full">
+                        Default
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-3 lg:grid-cols-4 lg:gap-8">
+
+                  {proMenuCard.map((menu, i) => (
+                  <PromotionCard key={i} {...menu} />
+                  ))}
+
+                </div>
+            </section>
+
+            <section className="mt-12 px-6">
+
+                <h2 className="text-lg font-semibold mb-4">
+                    Restaurant
+                </h2>
+
+              <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-3 lg:grid-cols-4 lg:gap-8">
+
+                {menuCard.map((menu, i) => (
+                  <MenuCard key={i} {...menu} />
+                ))}
+
+              </div>
+              
+            </section>
+
+            <div className="mt-16 border-t border-gray-800 py-6 text-center text-gray-400">
+                Footer
+            </div>
         </div>
       </section>
-
-      <section className="mt-12 px-6">
-
-        <h2 className="text-lg font-semibold mb-4">
-          Restaurant
-        </h2>
-
-        <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-3 lg:grid-cols-4 lg:gap-8">
-            
-            {restCard.map((menu, i) => (
-              <RestaurantCard key={i} {...menu} />
-            ))}
-
-        </div>
-      </section>
-
-      <div className="mt-16 border-t border-gray-800 py-6 text-center text-gray-400">
-        Footer
-      </div>
+      
+        <Footer/>
 
     </div>
   )
