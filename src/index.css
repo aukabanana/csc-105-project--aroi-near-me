@@ -4,6 +4,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Dongle:wght@300;400;700&family=Tai+Heritage+Pro:wght@400;700&family=Tapestry&display=swap');
 @import 'tailwindcss';
 @import '../src/assets/font/font.css';
+@import url('https://fonts.googleapis.com/css2?family=Tai+Heritage+Pro&display=swap');
 
 :root {
     /* === Text === */
