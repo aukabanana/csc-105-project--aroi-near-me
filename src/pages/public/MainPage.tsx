@@ -1,4 +1,5 @@
 import NavBar from '../../components/layouts/NavBar'
+import Footer from '../../components/layouts/Footer'
 import Logo from '../../components/layouts/Logo'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
@@ -227,14 +228,8 @@ export default function MainPage() {
               
             </section>
 
-            <div className="mt-16 border-t border-gray-800 py-6 text-center text-gray-400">
-                Footer
-            </div>
-        </div>
-      </section>
-      
-        <Footer/>
+            <Footer/>
+        </div>      
 
-    </div>
   )
 }
