@@ -3,7 +3,11 @@ import Logo from '../../components/layouts/Logo'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import PillSort from '../../components/ui/PillSort'
+import Footer from '../../components/layouts/Footer'
 import mainCover from '../../assets/images/Main.png'
+// import MenuHeader from '../../components/sections/MenuHeader'
+import PromotionHeader from '../../components/sections/PromotionHeader'
+// import RestaurantHeader from '../../components/sections/Restaurant'
  
 export default function MainPage() {
     return (
@@ -48,14 +52,7 @@ export default function MainPage() {
             </section>
 
             <section className="mt-10 px-4 md:px-8">
-                <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-lg font-semibold">
-                        Today's Promotion
-                    </h2>
-                    <div className="text-sm bg-gray-800 px-3 py-1 rounded-full">
-                        Default
-                    </div>
-                </div>
+                <div><PromotionHeader /></div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     <div className='flex flex-col'>
@@ -180,15 +177,8 @@ export default function MainPage() {
                     </div>
                 </div>
             </section>
-
-            <div className="mt-16 border-t border-gray-800 py-6 text-center text-gray-400">
-                Footer
-            </div>
-        </div>
-      </section>
       
-        <Footer/>
-
-    </div>
+            <Footer/>
+        </div>
   )
 }

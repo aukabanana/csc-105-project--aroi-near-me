@@ -14,7 +14,7 @@ function NavBar() {
                 <h2 className="font-extrabold text-xl md:text-3xl">ADMIN</h2>
                 <div className='flex flex-row items-center gap-3 md:gap-6'>
                     <button className="rounded-3xl text-(--color-brand-secondary) hover:text-white font-bold bg-(--color-brand-secondary)/20 border-2 hover:bg-(--color-brand-secondary)
-                    border-(--color-brand-secondary) px-[clamp(3px,2.5vw,8px)] py-1 transition-colors duration-300 cursor-pointer text-xs md:text-2xl"
+                    border-(--color-brand-secondary) px-[clamp(4px,2.5vw,12px)] py-1 transition-colors duration-300 cursor-pointer text-xs md:text-xl"
                     onClick={()=> setOpenMo(true)}>
                     + restaurant</button>
                     <p><Link to={'/Landing'}><FontAwesomeIcon icon={faArrowRightFromBracket} className="hover:text-red-500 transform-transition duration-300 text-lg md:text-4xl"/></Link></p>

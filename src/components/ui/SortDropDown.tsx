@@ -35,13 +35,13 @@ export default function SortDropDown({
         px-3 py-1.5 md:px-4 md:py-2
         rounded-full border border-gray-600 cursor-pointer 
         flex items-center justify-between gap-2
-        min-w-[120px] md:min-w-[160px]
+        w-20 md:w-auto
         text-xs md:text-sm
         transition-all duration-200
         hover:border-orange-400
         "
       >
-        <span>{value}</span>
+        <span className='whitespace-nowrap overflow-hidden text-ellipsis'>{value}</span>
 
         <span
           className={`text-xs transition-transform duration-200 ${
@@ -55,11 +55,11 @@ export default function SortDropDown({
       {/* Dropdown */}
       <div
         className={`absolute right-0 top-full mt-2 
-          w-[140px] md:w-44
+          w-35 md:w-44
           max-w-[calc(100vw-16px)]
           bg-[#2a2a2a] border border-gray-600 
           rounded-2xl shadow-xl overflow-hidden
-          z-[999]
+          z-50
           transition duration-150
           ${
             open
