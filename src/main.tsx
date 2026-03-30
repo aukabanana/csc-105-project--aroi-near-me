@@ -6,12 +6,17 @@ import './index.css'
 import LandingPage from './pages/public/LandingPage.tsx'
 import LoginPage from './pages/public/LoginPage.tsx';
 import MainPage from './pages/public/MainPage.tsx'
+import Test from './test.tsx';
 
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />
+  },
+  {
+    path: '/test',
+    element: <Test />
   },
   {
     path: '/Landing',

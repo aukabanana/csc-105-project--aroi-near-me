@@ -1,3 +1,8 @@
+import ConfirmBtn from "./components/ui/ConfirmBtn"
+import CancelBtn from "./components/ui/CancelBtn"
+import DeleteBtn from "./components/ui/DeleteBtn"
+import UpdateBtn from "./components/ui/UpdateBtn"
+
 function Test() {
 
   return (
@@ -33,6 +38,14 @@ function Test() {
         <h1 className='text-[48px] [font-family:var(--font-alt)]'>Tai Heritage Pro</h1>
         <h1 className='text-[48px] [font-family:var(--font-accent)]'>Tapestry</h1>
       </section>
+
+      <div>
+        <ConfirmBtn /> &nbsp;
+        <CancelBtn /> &nbsp;
+        <DeleteBtn /> &nbsp;
+        <UpdateBtn /> &nbsp;
+      </div>
+
     </div>
   )
 }

@@ -5,8 +5,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faLock } from "@fortawesome/free-solid-svg-icons"
-import cover2 from '../../assets/images/bcover.png'
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons"
+import cover2 from '../../assets/images/bcover.png'
 
 
 const adminSchema = z.object({
