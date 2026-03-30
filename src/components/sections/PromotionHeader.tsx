@@ -13,29 +13,25 @@ export default function PromotionHeader() {
   ];
 
   return (
-    <div className="flex items-center gap-2 md:gap-4 mb-4 md:mb-6 px-4 overflow-hidden">
+    <div className="flex items-center gap-2 md:gap-4 mb-4 md:mb-6">
 
       {/* Left */}
-      <div className="flex items-center gap-2 md:gap-3 min-w-0">
-        <div className="bg-orange-500/20 p-1.5 md:p-2 rounded-md md:rounded-lg">
-          <FontAwesomeIcon
-            icon={faTag}
-            className="text-orange-400 text-sm md:text-lg"
-          />
-        </div>
+        <div className="flex items-center gap-2 md:gap-4 min-w-0">
+            <FontAwesomeIcon icon={faTag} className="bg-yellow-500/20
+            text-sm sm:text-3xl md:text-3xl p-2.5 rounded-xl text-yellow-500"/>
 
-        <div className="leading-tight min-w-0">
-          <h1 className="text-base md:text-xl font-semibold text-white truncate">
-            Today's Promotion
-          </h1>
-          <p className="text-yellow-400 text-xs md:text-sm truncate">
-            Limited-time special offers
-          </p>
+            <div className="leading-tight min-w-0">
+                <h1 className="text-base md:text-xl font-semibold text-white truncate">
+                    Today's Promotion
+                </h1>
+                <p className="text-yellow-400 text-xs md:text-sm truncate">
+                    Limited-time special offers
+                </p>
+            </div>
         </div>
-      </div>
 
       {/* Line */}
-      <hr className="flex-1 h-[2px] bg-gray-600 border-0 mx-2 md:mx-4" />
+      <hr className="flex-1 h-0.5 bg-white border-t mx-2 md:mx-4" />
 
       {/* Right */}
       <SortDropDown

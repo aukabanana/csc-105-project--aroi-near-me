@@ -36,27 +36,29 @@ function LoginPage() {
     }
 
     return(
-        <div className="w-full min-h-screen relative overflow-hidden">
+        <div className="w-full min-h-screen relative overflow-hidden bg-black">
             <img 
                 src={cover2}
                 alt="background"
                 className="absolute inset-0 
                 w-full h-full
                 object-cover
-                object-[35%_50%]"
+                object-[35%_50%]
+                sm:object-[50%_50%]
                 md:object-center
+                blur-sm"
             />
+            <div className="absolute inset-0 bg-black/30"></div>
 
             <div className="relative z-10 flex flex-col justify-center items-center min-h-screen">
-
-                <div className="w-[80%] max-w-90 md:w-[40%] md:max-w-130 flex flex-col justify-center gap-2">
-                    <div className="max-w-90 flex justify-start items-center gap-1.5 text-[12px] text-(--color-text-primary) [font-family:var(--font-alt)] 
+                <div className="w-[80%] sm:w-[50%] md:w-[40%] flex flex-col justify-center bg-black/70 rounded-2xl md:rounded-3xl px-6 sm:px-8 md:px-10 py-6 sm:py-8 md:py-10 gap-3">
+                    <div className="max-w-90 flex justify-start items-center gap-1.5 text-lg md:text-2xl text-(--color-text-primary) [font-family:var(--font-alt)] 
                     hover:hover:text-(--color-brand-secondary) transition duration-300">
-                        <FontAwesomeIcon icon = {faChevronLeft} size="xl" />
-                        <Link to='/Landing' className="text-[16px] font-bold md:text-[20px]">Go back</Link>
+                        <FontAwesomeIcon icon = {faChevronLeft} />
+                        <Link to='/Landing'>Go back</Link>
                     </div>
-                    <div className="flex flex-col justify-center items-center bg-[rgba(var(--rgb-bg-surface)/0.9)] rounded-2xl md:rounded-3xl px-6 md:px-10 py-6 md:py-10 gap-3">
-                        <h2 className="pb-4 md:pb-8 text-2xl md:text-5xl text-(--color-text-primary)">
+                    <div className="flex flex-col justify-center items-center ">
+                        <h2 className="pb-4 sm:pb-6 md:pb-8 text-2xl md:text-5xl text-extrabold text-(--color-text-primary)">
                             Login
                         </h2>
 
@@ -69,7 +71,7 @@ function LoginPage() {
                                     type="text"
                                     placeholder="Enter username"
                                     {...register('username')}
-                                    className="w-full py-2 outline-none bg-transparent text-(--color-brand-secondary)"
+                                    className="w-full py-2 md:py-3 text-lg md:text-xl outline-none bg-transparent text-(--color-brand-secondary)"
                                 />
                             </div>
                             { errors.username && <span className="text-(--color-brand-primary)">{errors.username.message}</span>}
@@ -81,7 +83,7 @@ function LoginPage() {
                                     type="password"
                                     placeholder="Enter password"
                                     {...register('pass')}
-                                    className="w-full py-2 outline-none bg-transparent text-(--color-brand-secondary)"
+                                    className="w-full py-2 md:py-3 text-lg md:text-xl outline-none bg-transparent text-(--color-brand-secondary)"
                                 />
                             </div>
                             { errors.pass && <span className="text-(--color-brand-primary)">{errors.pass.message}</span>}
@@ -92,11 +94,11 @@ function LoginPage() {
                                     type="submit" 
                                     className="
                                         border border-(--color-brand-secondary) 
-                                        bg-(--color-brand-secondary)/15 
+                                        bg-(--color-brand-secondary)/40 
                                         text-(--color-brand-secondary) 
-                                        px-6 md:px-8 py-1
-                                        text-sm md:text-xl 
-                                        rounded-2xl md:rounded-4xl
+                                        px-6 sm:px-7 md:px-8 py-1
+                                        text-sm sm:text-lg md:text-xl 
+                                        rounded-2xl sm:rounded-2xl md:rounded-4xl
                                         hover:bg-(--color-brand-secondary) 
                                         hover:text-(--color-text-primary) 
                                         transition duration-300 
