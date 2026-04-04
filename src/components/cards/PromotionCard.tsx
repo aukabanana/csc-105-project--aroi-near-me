@@ -7,6 +7,7 @@ import DeleteBtn from "../ui/DeleteBtn";
 import { useState } from "react";
 import ModalConfirm from "../../features/admin/ModalConfirm";
 import ModalPromotionsForm from "../../features/admin/ModalPromotionsForm";
+import ModalAvailable from "../modals/MenuAvailable";
 
 export type ProCardProps = {
     image: string;
@@ -26,13 +27,15 @@ export default function PromotionCard ({image,name,restName,desc,price,originalP
 
     const [openDel, setOpenDel] = useState(false)
     const [openUp, setOpenUp] = useState(false)
+    const [openMoStatus, setOpenMoStatus] = useState(false)
 
     return (
-
+    
+    <>
       <div className="aspect-auto relative w-full min-h-50 h-auto bg-(--color-bg-surface) [box-shadow:0_0_1px_0_var(--color-text-primary)] rounded-[10px] flex flex-col cursor-pointer
         hover:[box-shadow:0_6px_24px_-8px_var(--color-brand-primary)] duration-300
         md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl
-        md:min-h-62.5 lg:min-h-125">
+        md:min-h-62.5 lg:min-h-125" onClick={() => setOpenMoStatus(true)}>
 
         {!status && <div className="absolute z-2 w-full h-full flex justify-center items-center bg-[rgba(var(--rgb-bg-default)/0.75)] rounded-[10px] text-(--color-text-primary) font-bold text-[9px]
         md:text-[12px] lg:text-[20px] xl:text-[22px] 2xl:text-[24px]
@@ -85,11 +88,8 @@ export default function PromotionCard ({image,name,restName,desc,price,originalP
                 <div className="flex flex-row justify-end items-center">
                     <div className="flex flex-row justify-start items-center gap-1
                     lg:gap-3">
-                        <UpdateBtn onUpdate={()=> {
-                            setOpenUp(true) 
-                            console.log('Update Clicked')}
-                        }/>
-                        {openUp && <ModalPromotionsForm onClose={()=> setOpenUp(false)}/>}
+                        <UpdateBtn onUpdate={()=> setOpenUp(true)}/>
+                        {openUp && <ModalPromotionsForm onClose={()=> setOpenUp(false)} />}
                         <DeleteBtn onDelete={()=> setOpenDel(true)}/>
                         {openDel && <ModalConfirm onClose={() => setOpenDel(false)}/>}
                     </div>
@@ -99,6 +99,15 @@ export default function PromotionCard ({image,name,restName,desc,price,originalP
         </div>
 
       </div>
+      {openMoStatus && (
+            <ModalAvailable
+            onClose={() => setOpenMoStatus(false)}
+            nameMenu={name}
+            descMenu={desc}
+            imageMenu={image}
+            statusMenu={status}
+        />)}
+    </>
 
   );
 

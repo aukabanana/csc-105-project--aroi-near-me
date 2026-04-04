@@ -14,7 +14,8 @@ function ModalPromotionsForm({ onClose }: { onClose: () => void }) {
     }
 
     return (
-        <div className="fixed inset-0 z-50 bg-white/20 flex justify-center items-center">
+
+        <div className="fixed inset-0 z-50 bg-white/20 flex justify-center items-center" onClick={onClose}>
             <div className='absolute z-1 w-full backdrop-blur-xs bg-(--color-text-primary)/0.1'></div>
             <div className="relative z-2 bg-(--color-bg-default) p-3 m-4 rounded-2xl
             max-h-[90vh] overflow-y-auto scrollbar-hide" onClick={(e) => e.stopPropagation()}>
