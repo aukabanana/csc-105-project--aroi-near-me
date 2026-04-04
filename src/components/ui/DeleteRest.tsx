@@ -1,4 +1,9 @@
-export default function CancelBtn () {
+import React from "react"
+type DeleteRestProps = {
+  onDeleteRest: (e: React.MouseEvent<HTMLButtonElement>) => void;
+};
+
+export default function DeleteRest ({ onDeleteRest } : DeleteRestProps) {
     return (
         <div>
             <button className='
@@ -8,7 +13,7 @@ export default function CancelBtn () {
             md:text-[12px]
             md:border
             lg:text-[20px]
-            '>Cancel</button>
+            ' onClick={onDeleteRest}>Delete</button>
         </div>
     )
 }

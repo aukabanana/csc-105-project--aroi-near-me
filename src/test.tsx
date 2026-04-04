@@ -42,8 +42,8 @@ function Test() {
       <div>
         <ConfirmBtn /> &nbsp;
         <CancelBtn /> &nbsp;
-        <DeleteBtn /> &nbsp;
-        <UpdateBtn /> &nbsp;
+        <DeleteBtn onDelete={()=> console.log('Delete')}/> &nbsp;
+        <UpdateBtn onUpdate={() => console.log('Update')}/> &nbsp;
       </div>
 
     </div>
@@ -51,3 +51,4 @@ function Test() {
 }
 
 export default Test
+

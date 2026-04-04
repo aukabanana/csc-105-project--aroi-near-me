@@ -12,7 +12,7 @@ import cover2 from '../../assets/images/bcover.png'
 const adminSchema = z.object({
     username: z.string().min(1),
     pass: z.string()
-}).refine((data) => data.username == 'AroiNearMe' && data.pass == 'aroidAdmin',{
+}).refine((data) => data.username == 'AroiNearMe' && data.pass == 'aroiAdmin',{
     message: "Invalid username or password",
     path: ['pass'],
 })

@@ -1,5 +1,10 @@
-import UpdateBtn from "../ui/UpdateBtn";
-import DeleteBtn from "../ui/DeleteBtn";
+import DeleteRest from "../ui/DeleteRest";
+import { useNavigate } from "react-router-dom";
+import ModalRestaurantForm from "../../features/admin/ModalRestaurantForm";
+
+import { useState } from "react";
+import ModalConfirm from "../../features/admin/ModalConfirm";
+import UpdateRest from "../ui/UpdateRest";
 
 export type RestCardProps = {
     image: string;
@@ -9,12 +14,17 @@ export type RestCardProps = {
 }
 
 export default function RestaurantCard ({image,restName,desc,admin}:RestCardProps) {
+
+    const [openDel, setOpenDel] = useState(false)
+    const [openRest, setOpenRest] = useState(false)
+    const navigate = useNavigate()
     return (
 
       <div className="aspect-auto relative w-full min-h-50 h-auto bg-(--color-bg-surface) [box-shadow:0_0_1px_0_var(--color-text-primary)] rounded-[10px] flex flex-col cursor-pointer
         hover:[box-shadow:0_6px_24px_-8px_var(--color-brand-primary)] duration-300
         md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl
-        md:min-h-62.5 lg:min-h-125">
+        md:min-h-62.5 lg:min-h-125"
+        onClick={()=> navigate(`/restaurant/${restName}`)}>
 
         <div className="relative rounded-[10px] h-[70%] md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl">
             <img src={image} alt="" className="rounded-t-[10px] w-full h-full object-cover md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl" />
@@ -36,8 +46,17 @@ export default function RestaurantCard ({image,restName,desc,admin}:RestCardProp
             {admin &&
                 <div className="flex flex-row justify-end items-center">
                     <div className="flex flex-row justify-start items-center gap-1 lg:gap-3">
-                        <UpdateBtn />
-                        <DeleteBtn />
+
+                        <UpdateRest 
+                        onUpdateRest={(e) => {
+                            setOpenRest(true)
+                            e.stopPropagation()}}/>
+                        {openRest && <ModalRestaurantForm onClose={() => setOpenRest(false)}/>}
+                        
+                        <DeleteRest onDeleteRest={(e) => {
+                            setOpenDel(true)
+                            e.stopPropagation()}}/>
+                        {openDel && <ModalConfirm onClose={()=> setOpenDel(false)}/>}
                     </div>
                 </div>
             }

@@ -4,6 +4,10 @@ import { faClock } from "@fortawesome/free-solid-svg-icons";
 import UpdateBtn from "../ui/UpdateBtn";
 import DeleteBtn from "../ui/DeleteBtn";
 
+import { useState } from "react";
+import ModalConfirm from "../../features/admin/ModalConfirm";
+import ModalPromotionsForm from "../../features/admin/ModalPromotionsForm";
+
 export type ProCardProps = {
     image: string;
     name: string;
@@ -19,6 +23,10 @@ export type ProCardProps = {
 }
 
 export default function PromotionCard ({image,name,restName,desc,price,originalPrice,discount,type,timer,status,admin}:ProCardProps) {
+
+    const [openDel, setOpenDel] = useState(false)
+    const [openUp, setOpenUp] = useState(false)
+
     return (
 
       <div className="aspect-auto relative w-full min-h-50 h-auto bg-(--color-bg-surface) [box-shadow:0_0_1px_0_var(--color-text-primary)] rounded-[10px] flex flex-col cursor-pointer
@@ -77,8 +85,13 @@ export default function PromotionCard ({image,name,restName,desc,price,originalP
                 <div className="flex flex-row justify-end items-center">
                     <div className="flex flex-row justify-start items-center gap-1
                     lg:gap-3">
-                        <UpdateBtn />
-                        <DeleteBtn />
+                        <UpdateBtn onUpdate={()=> {
+                            setOpenUp(true) 
+                            console.log('Update Clicked')}
+                        }/>
+                        {openUp && <ModalPromotionsForm onClose={()=> setOpenUp(false)}/>}
+                        <DeleteBtn onDelete={()=> setOpenDel(true)}/>
+                        {openDel && <ModalConfirm onClose={() => setOpenDel(false)}/>}
                     </div>
                 </div>
             }

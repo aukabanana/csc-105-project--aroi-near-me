@@ -31,7 +31,7 @@ export default function PromotionHeader() {
         </div>
 
       {/* Line */}
-      <hr className="flex-1 h-0.5 bg-white border-t mx-2 md:mx-4" />
+      <hr className="flex-1 h-0.5 bg-gray-600 border-0 mx-2 md:mx-4" />
 
       {/* Right */}
       <SortDropDown
