@@ -5,7 +5,7 @@ import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import MenuCard from '../../components/cards/MenuCards';
 import { useParams } from 'react-router-dom';
 import { restaurantData } from './RestaurantType'
-import ModalPromotionForm from '../../features/admin/ModalPromotionsForm'
+import ModalPromotionsForm from '../../features/admin/ModalPromotionsForm'
 import { useState } from 'react';
 
 function RestaurantPage() {
@@ -33,7 +33,7 @@ function RestaurantPage() {
                         <button className="rounded-3xl text-(--color-brand-secondary) hover:text-white font-bold bg-(--color-brand-secondary)/20 border-2 hover:bg-(--color-brand-secondary)
                     border-(--color-brand-secondary) px-[clamp(3px,2.5vw,8px)] py-1 transition-colors duration-300 cursor-pointer text-xs md:text-xl"
                         onClick={()=> setOpen(true)}>+ Menu</button>
-                        {open && <ModalPromotionForm onClose={()=> setOpen(false)}/>}
+                        {open && <ModalPromotionsForm onClose={()=> setOpen(false)}/>}
 
                     </div>
             

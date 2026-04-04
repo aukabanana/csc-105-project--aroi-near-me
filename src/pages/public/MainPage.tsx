@@ -15,7 +15,6 @@ import sushi from '../../assets/img/mockCardImage/sushi.jpg';
 import dishSushi from '../../assets/img/mockCardImage/dish-sushi.jpg';
 import restJapan from '../../assets/img/background/restJapan.jpg';
 
-
 const proMenuCard: ProCardProps[] = [
   {
     image: sushi,
@@ -103,6 +102,8 @@ export default function MainPage() {
 
     return (
         <div className='px-[clamp(20px,2.5vw,40px)] py-10 text-white min-h-screen bg-black'>
+
+            open
 
             <NavBar />
             
