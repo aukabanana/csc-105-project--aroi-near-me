@@ -3,14 +3,14 @@ import { faUtensils } from "@fortawesome/free-solid-svg-icons";
 
 export default function RestaurantHeader() {
   return (
-    <div className="flex items-center gap-2 md:gap-4 mb-4 md:mb-6 px-4 overflow-visible">
+    <div className="flex items-center gap-2 md:gap-4 mb-4 md:mb-6overflow-visible">
 
       {/* Left */}
       <div className="flex items-center gap-2 md:gap-3 min-w-fit">
-        <div className="bg-gray-700 p-1.5 md:p-2 rounded-md md:rounded-lg">
+        <div className="bg-yellow-400/20 p-1.5 md:p-2 rounded-md md:rounded-lg">
           <FontAwesomeIcon
             icon={faUtensils}
-            className="text-white text-sm md:text-lg"
+            className="text-yellow-400 text-sm sm:text-3xl md:text-3xl"
           />
         </div>
 
@@ -25,7 +25,7 @@ export default function RestaurantHeader() {
       </div>
 
       {/* Line */}
-      <hr className="flex-1 h-[2px] bg-gray-600 border-0 mx-2 md:mx-4" />
+      <hr className="flex-1 h-0.5 bg-gray-600 border-0 mx-2 md:mx-4" />
 
     </div>
   );

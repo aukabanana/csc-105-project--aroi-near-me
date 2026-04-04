@@ -1,4 +1,9 @@
-export default function UpdateBtn ({ onUpdate } : {onUpdate : () => void}) {
+import React from "react"
+type UpdateRestProps = {
+  onUpdateRest: (e: React.MouseEvent<HTMLButtonElement>) => void;
+};
+
+export default function UpdateRest ({ onUpdateRest } : UpdateRestProps) {
     return (
         <div>
             <button className='
@@ -7,7 +12,7 @@ export default function UpdateBtn ({ onUpdate } : {onUpdate : () => void}) {
             text-[9px] px-3
             md:text-[12px]
             lg:text-[20px]
-            ' onClick={onUpdate}>Update</button>
+            ' onClick={onUpdateRest}>Update</button>
         </div>
     )
 }

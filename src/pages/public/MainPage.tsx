@@ -4,19 +4,17 @@ import Logo from '../../components/layouts/Logo'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import PillSort from '../../components/ui/PillSort'
-import Footer from '../../components/layouts/Footer'
 import mainCover from '../../assets/images/Main.png'
-// import MenuHeader from '../../components/sections/MenuHeader'
 import PromotionHeader from '../../components/sections/PromotionHeader'
-// import RestaurantHeader from '../../components/sections/Restaurant'
-
-import MenuCard, { type MenuCardProps } from '../../components/cards/MenuCards';
+import RestaurantHeader from '../../components/sections/Restaurant'
+// import MenuCard, { type MenuCardProps } from '../../components/cards/MenuCards';
 import PromotionCard, {type ProCardProps}   from '../../components/cards/PromotionCard';
 import RestaurantCard, { type RestCardProps} from '../../components/cards/RestaurantCard';
 //Mock data section
 import sushi from '../../assets/img/mockCardImage/sushi.jpg';
 import dishSushi from '../../assets/img/mockCardImage/dish-sushi.jpg';
 import restJapan from '../../assets/img/background/restJapan.jpg';
+
 
 const proMenuCard: ProCardProps[] = [
   {
@@ -56,35 +54,6 @@ const proMenuCard: ProCardProps[] = [
     type: "Sushi",
     timer: "12:11:04",
     status: true,
-    admin: false
-  },
-  {
-    image: dishSushi,
-    name: "Nigiri",
-    restName: "Sakura Kitchen",
-    desc: "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
-    price: 220,
-    originalPrice: 0,
-    discount: 0,
-    type: "Sushi",
-    timer: "",
-    status: false,
-    admin: false
-  },
-]
-
-const menuCard: MenuCardProps[] = [
-  {
-    image: sushi,
-    name: "Salmon Nigiri",
-    restName: "Sakura Japanese Kitchen",
-    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's",
-    price: 129,
-    originalPrice: 0,
-    discount: 0,
-    type: "Sushi",
-    timer: "",
-    status: true,
     admin: true
   },
   {
@@ -97,65 +66,41 @@ const menuCard: MenuCardProps[] = [
     discount: 0,
     type: "Sushi",
     timer: "",
-    status: true,
-    admin: true
-  },
-  {
-    image: sushi,
-    name: "Tonkotsu Ramen",
-    restName: "Sakura Kitchen",
-    desc: "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
-    price: 139,
-    originalPrice: 0,
-    discount: 0,
-    type: "Ramen",
-    timer: "",
-    status: true,
-    admin: false
-  },
-  {
-    image: dishSushi,
-    name: "Takoyaki",
-    restName: "Sakura",
-    desc: "lorem lorem lorem lorem lorem lorem lorem",
-    price: 220,
-    originalPrice:0,
-    discount: 0,
-    type: "Sushi",
-    timer: "",
     status: false,
-    admin: false
+    admin: true
   },
 ]
 
-const restCard: RestCardProps[] = [
+
+const RestCard: RestCardProps[] = [
   {
     image: restJapan,
-    restName: "Japung Restau",
+    restName: "omakase-shin",
     desc: "lorem lorem lorem lorem lorem lorem lorem lorem ",
     admin: true,
   },
   {
     image: restJapan,
-    restName: "Japung Restau",
+    restName: "omakase-shin",
     desc: "lorem lorem lorem lorem lorem lorem lorem lorem ",
     admin: true,
   },
   {
     image: restJapan,
-    restName: "Japung Restau",
+    restName: "omakase-shin",
     desc: "lorem lorem lorem lorem lorem lorem lorem lorem ",
-    admin: false,
+    admin: true,
   },
   {
     image: restJapan,
-    restName: "Japung Restau",
+    restName: "omakase-shin",
     desc: "lorem lorem lorem lorem lorem lorem lorem lorem ",
-    admin: false,
+    admin: true,
   },
 ]
  
 export default function MainPage() {
+
     return (
         <div className='px-[clamp(20px,2.5vw,40px)] py-10 text-white min-h-screen bg-black'>
 
@@ -211,14 +156,12 @@ export default function MainPage() {
 
             <section className="mt-12 px-6">
 
-                <h2 className="text-lg font-semibold mb-4">
-                    Restaurant
-                </h2>
+              <RestaurantHeader />
 
               <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-3 lg:grid-cols-4 lg:gap-8">
 
-                {menuCard.map((menu, i) => (
-                  <MenuCard key={i} {...menu} />
+                {RestCard.map((rest, r) => (
+                  <RestaurantCard key={r} {...rest} />
                 ))}
 
               </div>

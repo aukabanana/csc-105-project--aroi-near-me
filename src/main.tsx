@@ -7,6 +7,7 @@ import LandingPage from './pages/public/LandingPage.tsx'
 import LoginPage from './pages/public/LoginPage.tsx';
 import MainPage from './pages/public/MainPage.tsx'
 import Test from './test.tsx';
+import RestaurantPage from './pages/restaurant/RestaurantPage.tsx'
 
 
 const router = createBrowserRouter([
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: '/MainPage',
     element: <MainPage />
+  },
+  {
+    path: '/restaurant/:id',
+    element: <RestaurantPage />
   }
 ])
 createRoot(document.getElementById('root')!).render(
