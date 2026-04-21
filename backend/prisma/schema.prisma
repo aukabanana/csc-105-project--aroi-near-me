@@ -34,6 +34,7 @@ model Menu {
 
   restaurantId String
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+
 }
 model Admin {
   id       String @id @default(uuid())
