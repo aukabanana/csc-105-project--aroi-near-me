@@ -1,4 +1,4 @@
-export default function DeleteBtn ({ onDelete } : { onDelete : ()=> void}) {
+export default function DeleteBtn ({ onDelete } : { onDelete : (e : React.MouseEvent)=> void}) {
     return (
         <div>
             <button className='
@@ -8,7 +8,9 @@ export default function DeleteBtn ({ onDelete } : { onDelete : ()=> void}) {
             md:text-[12px]
             md:border
             lg:text-[20px]
-            ' onClick={onDelete}>Delete</button>
+            ' onClick={(e) => {
+                e.stopPropagation()
+                onDelete(e)}}>Delete</button>
         </div>
     )
 }

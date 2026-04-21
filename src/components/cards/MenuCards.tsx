@@ -93,7 +93,7 @@ export default function MenuCard ({image,name,restName,desc,price,originalPrice,
                         }/>
                         {openUp && <ModalPromotionsForm onClose={()=> setOpenUp(false)}/>}
 
-                        <DeleteBtn onDelete={()=> setOpenDel(true)}/>
+                        <DeleteBtn onDelete={() => {setOpenDel(true)}}/>
                         {openDel && <ModalConfirm onClose={()=> setOpenDel(false)}/>}
                     </div>
                 </div>

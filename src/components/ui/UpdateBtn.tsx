@@ -7,7 +7,9 @@ export default function UpdateBtn ({ onUpdate } : {onUpdate : () => void}) {
             text-[9px] px-3
             md:text-[12px]
             lg:text-[20px]
-            ' onClick={onUpdate}>Update</button>
+            ' onClick={(e) => {
+                e.stopPropagation()
+                onUpdate()}}>Update</button>
         </div>
     )
 }
