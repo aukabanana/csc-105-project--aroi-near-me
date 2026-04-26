@@ -11,36 +11,32 @@ generator client {
 datasource db {
   provider = "sqlite"
 }
-model Restaurant{
-  id String @id @default(uuid())
-  name String
-  banner String
-  address String
-  menus Menu[]
 
+model Restaurant {
+  id      String @id @default(uuid())
+  name    String
+  banner  String
+  address String
+  menus   Menu[]
 }
+
 model Menu {
-  id String  @id @default(uuid())
-  image String
-  name String
-  restName String 
-  desc String
-  price Float?
+  id       String  @id @default(uuid())
+  image    String
+  name     String
+  desc     String
+  price    Float
   discount Float?
-  type String
-  timer String?
-  status Boolean
-  admin Boolean?
+  type     String
+  timer    String?
+  status   Boolean @default(true)
 
   restaurantId String
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
-
 }
+
 model Admin {
   id       String @id @default(uuid())
   username String
-  pass     String
+  password String
 }
-
-
-
