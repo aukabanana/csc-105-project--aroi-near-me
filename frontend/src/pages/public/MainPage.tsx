@@ -103,8 +103,6 @@ export default function MainPage() {
     return (
         <div className='px-[clamp(20px,2.5vw,40px)] py-10 text-white min-h-screen bg-black'>
 
-            open
-
             <NavBar />
             
             <section className="relative flex flex-col items-center text-center px-4
