@@ -22,20 +22,20 @@ function ModalPromotionsForm({ onClose }: { onClose: () => void }) {
                 <div className="flex items-center gap-3 w-[clamp(200px,70vw,800px)]">
                     <FontAwesomeIcon icon={faUtensils} className="bg-yellow-500/20
                     text-sm sm:text-3xl md:text-3xl p-2.5 rounded-xl text-yellow-500"/>
-                    <p className="text-sm  sm:text-lg md:text-xl font-extrabold text-yellow-500">Create Promotion Menu</p>
+                    <p className="text-sm  sm:text-lg md:text-xl font-extrabold text-yellow-500">Create Menu</p>
                     <hr className="flex-1 border-t-px border-white " />
                 </div>
                 <form className="flex flex-col gap-2">
                     <div className="flex flex-col md:flex-row justify-between gap-2">
                         <div className="flex flex-col gap-[clamp(2px,2.5vw,4px)] w-full md:flex-2">
-                            <label htmlFor="restName">Menu Name</label>
+                            <label htmlFor="restName" className="text-white">Menu Name</label>
                             <input type="text" id="restName" className="border border-(--color-brand-secondary) rounded-md
                             p-[clamp(10px,2.5vw,20px)] text-sm md:4xl h-10 md:h-12 outline-none focus:outline-none"
                                 required placeholder="Restaurant Name" />
                         </div>
 
                         <div className="flex flex-col gap-[clamp(2px,2.5vw,4px)] w-full md:flex-1">
-                            <label htmlFor="time" className="font-medium">Promotion Time</label>
+                            <label htmlFor="time" className="font-medium text-white">Promotion Time</label>
 
                             <div className="flex flex-row items-center justify-between
                             border border-(--color-brand-secondary) rounded-md
@@ -47,37 +47,27 @@ function ModalPromotionsForm({ onClose }: { onClose: () => void }) {
                                         type="time"
                                         className="outline-none focus:outline-none text-sm
                                         apper"
-                                        id="timeStart"
+                                        id="time"
                                     />
-                                </div>
-
-                                <span className="text-(--color-brand-secondary)">–</span>
-
-
-                                <div className="flex flex-col items-start">
-                                    <span className="text-[10px] text-(--color-brand-secondary)">End</span>
-                                    <input
-                                        type="time"
-                                        className="w-fit min-w-0 bg-transparent outline-none text-sm"/>
                                 </div>
 
                             </div>
                         </div>
                     </div>
                     <div className="flex flex-col gap-[clamp(2px,2.5vw,4px)] w-full">
-                            <label htmlFor="restName">Price</label>
+                            <label htmlFor="restName" className="text-white">Price</label>
                             <input type="number" id="restName" className="border border-(--color-brand-secondary) rounded-md
                             p-[clamp(10px,2.5vw,20px)] text-sm md:4xl h-10 md:h-12 outline-none focus:outline-none"
                                 required placeholder="Price (numeric only)" />
                     </div>
                     <div className="flex flex-col gap-[clamp(2px,2.5vw,4px)] w-full">
-                            <label htmlFor="restName">Discount Price</label>
+                            <label htmlFor="restName" className="text-white">Discount Price</label>
                             <input type="number" id="restName" className="border border-(--color-brand-secondary) rounded-md
                             p-[clamp(10px,2.5vw,20px)] text-sm md:4xl h-10 md:h-12 outline-none focus:outline-none"
                                 required placeholder="Discounted Price (numeric only)" />
                     </div>
                     <div className="flex flex-col gap-[clamp(2px,2.5vw,4px)] w-full">
-                            <label htmlFor="restName">Description</label>
+                            <label htmlFor="restName" className="text-white">Description</label>
                             <input type="text" id="restName" className="border border-(--color-brand-secondary) rounded-md
                             p-[clamp(10px,2.5vw,20px)] text-sm md:4xl h-10 md:h-12 outline-none focus:outline-none"
                                 required placeholder="Description" />

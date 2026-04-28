@@ -30,7 +30,7 @@ function ModalConfirm({onClose} : {onClose : ()=> void}) {
                     duration-300 cursor-pointer" onClick={(e) => {
                         e.preventDefault()
                         onClose()
-                    }}>Cencel</button>
+                    }}>Cancel</button>
 
                     <button className="border border-(--color-state-success) text-(--color-state-success)
                     text-sm md:text-lg px-[clamp(9px,2.5vw,18px)] py-[clamp(3px,2.5vw,6px)] rounded-full 
