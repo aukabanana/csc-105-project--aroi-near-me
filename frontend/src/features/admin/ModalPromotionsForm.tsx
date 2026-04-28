@@ -1,18 +1,17 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faUtensils } from "@fortawesome/free-solid-svg-icons"
 import { useState } from 'react'
-
-
+import SortType from "../../components/ui/SortType"
 
 function ModalPromotionsForm({ onClose }: { onClose: () => void }) {
     const [preview, setPreview] = useState<string | null>(null)
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => { //get element from input type and use event of react
+    const [type,setType] = useState('ALL')
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if (file) {
             setPreview(URL.createObjectURL(file))
         }
     }
-
     return (
 
         <div className="fixed inset-0 z-50 bg-white/20 flex justify-center items-center" onClick={onClose}>
@@ -26,6 +25,15 @@ function ModalPromotionsForm({ onClose }: { onClose: () => void }) {
                     <hr className="flex-1 border-t-px border-white " />
                 </div>
                 <form className="flex flex-col gap-2">
+                    <div className="flex flex-row gap-5">
+                        <label htmlFor="restType" className="text-white">Type</label>
+                        <SortType 
+                            options={['ALL','SUSHI','DONBURI','RAMEN','SNACK','DRINK']}
+                            value={type}
+                            onChange={setType}
+                        />
+                    </div>
+
                     <div className="flex flex-col md:flex-row justify-between gap-2">
                         <div className="flex flex-col gap-[clamp(2px,2.5vw,4px)] w-full md:flex-2">
                             <label htmlFor="restName" className="text-white">Menu Name</label>
