@@ -1,52 +1,66 @@
-import express, { Request, Response } from 'express'
-import morgan from 'morgan'
-import "dotenv/config"
-import prisma from './lib/prisma'
-import { z, ZodError } from 'zod'
+import express, { Request, Response } from 'express';
+import 'dotenv/config';
+import morgan from 'morgan';
+import prisma from './lib/prisma.js';
+import { z, ZodError } from 'zod';
 
-const app = express()
-const PORT = 3000
+const app = express();
+const PORT = process.env.PORT;
+if (!PORT) throw new Error(`PORT is missing in your env file`);
 
-if (!PORT) throw new Error("This PORT is does not exist")
+app.use(express.json());
+app.use(morgan('dev'));
 
-const restaurantSchema = z.object({
-    id: z.string(),
-    name: z.string(),
-    banner: z.string(),
-    address: z.string(),
-    menu: z.array(menuSchema)
+// ? Schema Section
+const Restaurant = z.object({
+    id: z.string().uuid(),
+    name: z.string().min(1),
+    address: z.string().min(1),
+    banner: z.string().min(1)
+});
+const partialRestaurant = Restaurant.partial();
+
+const MenuTypeEnum = z.enum([
+    'ALL',
+    'SUSHI',
+    'DONBURI',
+    'RAMEN',
+    'SNACK',
+    'DRINK'
+])
+
+const Menu = z.object({
+    id: z.string().uuid(),
+    name: z.string().min(1),
+    desc: z.string().min(1),
+    price: z.number().positive(),
+    discount: z.number().min(0).optional(),
+    type: MenuTypeEnum.default('ALL'),
+    timer: z.string().datetime().optional(),
+    image: z.string().min(1),
+    status: z.boolean().default(false),
+
+    created_at: z.string().datetime(),
+    updated_at: z.string().datetime(),
+
+    restaurant_id: z.string().uuid(),
+    is_active: z.boolean().default(true),
 })
-const partialRestaurant = restaurantSchema.partial()
+const partialMenu = Menu.partial();
 
-const menuSchema = z.object({
-    id: z.string(),
-    image: z.string(),
-    name: z.string(),
-    restName: z.string(),
-    desc: z.string(),
-    price: z.number().optional(),
-    discount: z.number().optional(),
-    type: z.string(),
-    timer: z.string(),
-    status: z.boolean(),
-    admin: z.boolean(),
-
-    restaurantId: z.string()
+const Admin = z.object({
+    id: z.string().uuid(),
+    username: z.string().min(1),
+    password: z.string().min(6)
 })
-const partialMenu = menuSchema.partial()
 
-const adminSchema = z.object({
-    id: z.string(),
-    username: z.string(),
-    pass: z.string()
-})
-const partialAdmin = adminSchema.partial()
-
-app.use(express.json())
-app.use(morgan('dev'))
-
-
-
+// ? Simple Health Check endpoint
 app.listen(PORT, () => {
-    console.log(`This server is running on PORT: ${PORT}`)
+    console.log(`Server Is Running On http://localhost:${PORT}`);
+});
+
+app.get('/', (_req, res: Response) => {
+    res.send('Connected, Welcome to BackEnd jaaaa 👾👾')
 })
+
+// ? Implement Code
