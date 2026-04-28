@@ -46,7 +46,7 @@ model Menu {
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
 
-  restaurant_id String
+  restaurant_id String 
   restaurant    Restaurant @relation(fields: [restaurant_id], references: [id])
 }
 

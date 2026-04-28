@@ -12,13 +12,12 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // ? Schema Section
-const Restaurant = z.object({
-    id: z.string().uuid(),
+const restaurantSchema = z.object({
     name: z.string().min(1),
-    address: z.string().min(1),
-    banner: z.string().min(1)
+    banner: z.string().min(1),
+    address: z.string().min(1)
 });
-const partialRestaurant = Restaurant.partial();
+const partialRestaurant = restaurantSchema.partial();
 
 const MenuTypeEnum = z.enum([
     'ALL',
@@ -29,8 +28,7 @@ const MenuTypeEnum = z.enum([
     'DRINK'
 ])
 
-const Menu = z.object({
-    id: z.string().uuid(),
+const menuSchema = z.object({
     name: z.string().min(1),
     desc: z.string().min(1),
     price: z.number().positive(),
@@ -38,20 +36,60 @@ const Menu = z.object({
     type: MenuTypeEnum.default('ALL'),
     timer: z.string().datetime().optional(),
     image: z.string().min(1),
-    status: z.boolean().default(false),
-
-    created_at: z.string().datetime(),
-    updated_at: z.string().datetime(),
-
     restaurant_id: z.string().uuid(),
-    is_active: z.boolean().default(true),
 })
-const partialMenu = Menu.partial();
+const partialMenu = menuSchema.partial();
 
 const Admin = z.object({
-    id: z.string().uuid(),
     username: z.string().min(1),
     password: z.string().min(6)
+})
+
+app.get('/menus', async (req: Request, res: Response) => {
+    try {
+        const data = await prisma.menu.findMany();
+        res.status(200).json(data);
+    } catch (error) {
+        if (error instanceof ZodError) return res.status(400).json(error.issues)
+        res.status(500).json(error)
+    }
+})
+
+app.post('/create-menu', async (req: Request, res: Response) => {
+    try {
+        // const create = createMenu.parse(req.body);
+        const {name, desc, price, discount, type, timer, image, restaurant_id} = menuSchema.parse(req.body)
+        const newMenu = await prisma.menu.create({
+            data: {name, desc, price, discount, type : type as any, timer, image, restaurant_id}
+        })
+        res.status(201).json(newMenu)
+    } catch (error) {
+        if (error instanceof ZodError) return res.status(400).json(error.issues)
+        res.status(500).json(error)
+    }
+})
+
+app.get('/restaurant', async (req: Request, res: Response) => {
+    try {
+        const data = await prisma.restaurant.findMany()
+        res.status(200).json(data)
+    } catch(error) {
+        if (error instanceof ZodError) return res.status(400).json(error.issues)
+        res.status(500).json(error)
+    }
+})
+
+app.post('/create-rest', async (req: Request, res: Response) => {
+    try {
+        const {name, banner, address} = restaurantSchema.parse(req.body)
+        const newRest = await prisma.restaurant.create({
+            data: {name, banner, address}
+        })
+        res.status(201).json(newRest)
+    } catch (error) {
+        if (error instanceof ZodError) return res.status(400).json(error.issues)
+        res.status(500).json(error)
+    }
 })
 
 // ? Simple Health Check endpoint
