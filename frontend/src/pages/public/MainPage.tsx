@@ -1,6 +1,7 @@
 import NavBar from '../../components/layouts/NavBar'
 import Footer from '../../components/layouts/Footer'
 import Logo from '../../components/layouts/Logo'
+import { useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import PillSort from '../../components/ui/PillSort'
@@ -99,11 +100,10 @@ const RestCard: RestCardProps[] = [
 ]
  
 export default function MainPage() {
-
+  //LocalStorage
+  // localStorage.setItem()
     return (
         <div className='px-[clamp(20px,2.5vw,40px)] py-10 text-white min-h-screen bg-black'>
-
-            open
 
             <NavBar />
             
