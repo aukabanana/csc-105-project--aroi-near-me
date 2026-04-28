@@ -12,8 +12,34 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // ? Schema Section
+const Restaurant = z.object({
+    id: z.string().uuid(),
+    name: z.string().min(1),
+    address: z.string().min(1),
+    banner: z.string().min(1)
+});
+const partialRestaurant = Restaurant.partial();
 
+const Menu = z.object({
+    id: z.string().uuid(),
+    name: z.string().min(1),
+    desc: z.string().min(1),
+    price: z.number().positive(),
+    discount: z.number().optional(),
+    type: z.string().min(1),
+    timer: z.string().optional(),
+    image: z.string().min(1),
+    status: z.boolean().default(true)
+})
+const partialMenu = Menu.partial();
 
+const Admin = z.object({
+    id: z.string().uuid(),
+    username: z.string().min(1),
+    password: z.string().min(6)
+})
+
+// ? Simple Health Check endpoint
 app.listen(PORT, () => {
     console.log(`Server Is Running On http://localhost:${PORT}`);
 });
