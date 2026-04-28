@@ -20,16 +20,31 @@ const Restaurant = z.object({
 });
 const partialRestaurant = Restaurant.partial();
 
+const MenuTypeEnum = z.enum([
+    'ALL',
+    'SUSHI',
+    'DONBURI',
+    'RAMEN',
+    'SNACK',
+    'DRINK'
+])
+
 const Menu = z.object({
     id: z.string().uuid(),
     name: z.string().min(1),
     desc: z.string().min(1),
     price: z.number().positive(),
-    discount: z.number().optional(),
-    type: z.string().min(1),
-    timer: z.string().optional(),
+    discount: z.number().min(0).optional(),
+    type: MenuTypeEnum.default('ALL'),
+    timer: z.string().datetime().optional(),
     image: z.string().min(1),
-    status: z.boolean().default(true)
+    status: z.boolean().default(false),
+
+    created_at: z.string().datetime(),
+    updated_at: z.string().datetime(),
+
+    restaurant_id: z.string().uuid(),
+    is_active: z.boolean().default(true),
 })
 const partialMenu = Menu.partial();
 

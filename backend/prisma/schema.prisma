@@ -37,10 +37,14 @@ model Menu {
   price     Float
   discount  Float?
   type      menu_type @default(ALL)
-  timer     String?
+  timer     DateTime?
   image     String
-  status    Boolean   @default(true)
+
+  status    Boolean   @default(false)
   is_active Boolean   @default(true)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
 
   restaurant_id String
   restaurant    Restaurant @relation(fields: [restaurant_id], references: [id])
