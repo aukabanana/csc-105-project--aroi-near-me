@@ -1,9 +1,7 @@
 import express, {Request, Response} from 'express'
 import morgan from 'morgan'
 import { z, ZodError } from 'zod'
-import prisma from '../src/lib/prisma'
-
-
+import prisma from '../lib/prisma.js'
 
 
 // ? Schema Section
