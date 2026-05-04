@@ -52,6 +52,6 @@ model Menu {
 
 model Admin {
   id       String @id @default(uuid())
-  username String
+  username String 
   password String
 }
