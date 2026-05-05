@@ -60,3 +60,8 @@ export const loginAdmin = async (req: Request, res: Response) => {
         return res.status(500).json({message: 'Internal Server Error'})
     }
 }
+
+export const logoutAdmin = async (req: Request, res: Response) => {
+    res.clearCookie("token")
+    res.status(200).json({message: 'Logged out successfully'})
+}

@@ -17,6 +17,7 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
       const payload = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
   
       // Step 4 — attach the decoded payload to the request object
+      //for awareness who actions and sent the request 
       req.admin = payload;
   
       // Step 5 — pass control to the next middleware or controller

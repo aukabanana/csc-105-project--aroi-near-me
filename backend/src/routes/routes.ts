@@ -5,9 +5,9 @@ import { Router } from 'express'
 const router = Router()
 
 router.get('/menus', controller.getAllMenu)
-router.post('/create-menu', controller.createMenu)
+router.post('/create-menu', authenticate, controller.createMenu)
 router.get('/restaurants', controller.getAllRestaurant)
-router.post('/create-restaurant', controller.createRestaurant)
+router.post('/create-restaurant', authenticate, controller.createRestaurant)
 router.get('/menu-by-name', controller.getMenuByName)
 router.patch("/menu/:id", controller.updateMenu)
 router.delete("/menu/:id", controller.deleteMenu)
