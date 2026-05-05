@@ -29,6 +29,7 @@ const menuSchema = z.object({
     type: MenuTypeEnum.default('ALL'),
     timer: z.string().datetime().optional(),
     image: z.string().min(1),
+    status: z.boolean().default(false),
     restaurant_id: z.string().uuid(),
 })
 const partialMenu = menuSchema.partial();
@@ -64,16 +65,63 @@ export const createMenu = async (req: Request, res: Response) => {
 }
 
 //get menu by name
-//implement code here
+export const getMenuByName = async (req: Request, res: Response) => {
+    try {
+        const name = req.params.name as string
+        const data = await prisma.menu.findMany({
+            where: {name: name}})
+        res.status(200).json(data)
+    } catch(error) {
+        if (error instanceof ZodError) return res.status(400).json(error.issues)
+        res.status(500).json(error)
+    }
+}
+
+
 
 
 //update menu (using patch)
-//implement code here
+export const updateMenu = async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id as string
+        const data = partialMenu.parse(req.body)
+
+        const updateMenu = await prisma.menu.update({
+            where:{id},
+            data: data
+        })
+        res.status(200).json(updateMenu)
+    } catch (error) {
+        if (error instanceof ZodError)
+            return res.status(400).json(error.issues)
+        res.status(500).json(error)
+    }
+}
 
 
 //delete menu --> Change staus is_active
-//implement code here
+export const deleteMenu = async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id as string
 
+        const data = await prisma.menu.update({
+            where: {
+                id: id
+            },
+            data: {
+                is_active: false
+            }
+        })
+        res.status(200).json({
+            message: "Menu deleted successfully",
+            data
+        })
+    } catch (error) {
+        if (error instanceof ZodError)
+            return res.status(400).json(error.issues)
+        res.status(500).json(error)
+    }
+}
 
 export const getAllRestaurant = async (req: Request, res: Response) => {
     try {
@@ -99,8 +147,42 @@ export const createRestaurant = async (req: Request, res: Response) => {
 }
 
 //update restaurant (using patch)
-//implement code here
-
+export const updateRestaurant = async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id as string
+        const data = await prisma.restaurant.update({
+            where: {
+                id: id
+            },
+            data: req.body
+        })
+        res.status(200).json(data)
+    } catch (error) {
+        if (error instanceof ZodError)
+            return res.status(400).json(error.issues)
+        res.status(500).json(error)
+    }
+}
 
 //delete restaurant  --> Change staus is_active
-//implement code here
+export const deleteRestaurant = async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id as string
+        const data = await prisma.restaurant.update({
+            where: {
+                id: id
+            },
+            data: {
+                is_active: false
+            }
+        })
+        res.status(200).json({
+            message: "Restaurant deleted successfully",
+            data
+        })
+    } catch (error) {
+        if (error instanceof ZodError)
+            return res.status(400).json(error.issues)
+        res.status(500).json(error)
+    }
+}
