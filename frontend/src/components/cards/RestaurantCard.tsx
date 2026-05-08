@@ -7,13 +7,14 @@ import ModalConfirm from "../../features/admin/ModalConfirm";
 import UpdateRest from "../ui/UpdateRest";
 
 export type RestCardProps = {
+    id: string;
     image: string;
     restName: string;
     desc: string;
     admin?: boolean;
 }
 
-export default function RestaurantCard ({image,restName,desc,admin}:RestCardProps) {
+export default function RestaurantCard ({id,image,restName,desc,admin}:RestCardProps) {
 
     const [openDel, setOpenDel] = useState(false)
     const [openRest, setOpenRest] = useState(false)
@@ -24,7 +25,7 @@ export default function RestaurantCard ({image,restName,desc,admin}:RestCardProp
         hover:[box-shadow:0_6px_24px_-8px_var(--color-brand-primary)] duration-300
         md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl
         md:min-h-62.5 lg:min-h-125"
-        onClick={()=> navigate(`/restaurant/${restName}`)}>
+        onClick={()=> navigate(`/restaurant/${id}`)}>
 
         <div className="relative rounded-[10px] h-[70%] md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl">
             <img src={image} alt="" className="rounded-t-[10px] w-full h-full object-cover md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl" />

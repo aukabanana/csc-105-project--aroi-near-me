@@ -75,12 +75,12 @@ export default function PromotionCard ({image,name,restName,desc,price,originalP
                 <div className="flex flex-row justify-start items-center gap-1 lg:gap-3">
                     {price && <p className="text-[8px] font-bold text-(--color-brand-primary)
                     md:text-[10px] lg:text-[18px] xl:text-[20px] 2xl:text-[22px]">฿{price}</p>}
-                    {originalPrice > 0 && <p className="text-[8px] font-bold text-(--color-brand-scondary) line-through
+                    {(originalPrice ?? 0) > 0 && <p className="text-[8px] font-bold text-(--color-brand-scondary) line-through
                     md:text-[8px] lg:text-[18px] xl:text-[20px] 2xl:text-[22px]">฿{originalPrice}</p>}
                 </div>
                 <div className="px-1 bg-[rgba(var(--rgb-brand-primary)/0.15)] rounded-full font-bold text-[8px] text-(--color-brand-primary)
                 md:text-[10px] lg:text-[18px] xl:text-[20px] 2xl:text-[22px]">
-                    {discount > 0 && <p>-{discount}%</p>}
+                    {(discount ?? 0) > 0 && <p>-{discount}%</p>}
                 </div>
             </div>
 
