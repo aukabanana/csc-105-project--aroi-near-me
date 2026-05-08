@@ -74,7 +74,6 @@ const proMenuCard: ProCardProps[] = [
 export default function MainPage() {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([])
   const [restaurantError, setRestaurantError] = useState('')
-  const [isRestaurantLoading, setIsRestaurantLoading] = useState(true)
 
   useEffect(() => {
     async function fetchRestaurants() {
@@ -85,8 +84,6 @@ export default function MainPage() {
         setRestaurantError(
           err instanceof Error ? err.message : 'Cannot fetch restaurants'
         )
-      } finally {
-        setIsRestaurantLoading(false)
       }
     }
 
@@ -154,27 +151,22 @@ export default function MainPage() {
 
               <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-3 lg:grid-cols-4 lg:gap-8">
 
-                {isRestaurantLoading && (
-                  <p className="col-span-full text-sm text-(--color-brand-secondary)">
-                    Loading restaurants...
-                  </p>
-                )}
-
-                {!isRestaurantLoading && restaurantError && (
+                {restaurantError && (
                   <p className="col-span-full text-sm text-red-400">
                     {restaurantError}
                   </p>
                 )}
 
-                {!isRestaurantLoading && !restaurantError && restaurants.length === 0 && (
+                {!restaurantError && restaurants.length === 0 && (
                   <p className="col-span-full text-sm text-(--color-brand-secondary)">
                     No restaurants found.
                   </p>
                 )}
 
-                {!isRestaurantLoading && !restaurantError && restaurants.map((rest) => (
+                {!restaurantError && restaurants.map((rest) => (
                   <RestaurantCard
                     key={rest.id}
+                    id={rest.id}
                     image={rest.banner}
                     restName={rest.name}
                     desc={rest.address}
