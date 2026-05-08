@@ -29,6 +29,14 @@ export default function MenuCard ({image,name,restName,desc,price,originalPrice,
     const [openUp, setOpenUp] = useState(false)
     const [openMoStatus, setOpenMoStatus] = useState(false)
 
+    const hasDiscount = (discount ?? 0) > 0;
+
+    const original = price;
+
+    const finalPrice = hasDiscount && original
+    ? Math.round(original * (1 - discount! / 100))
+    : price;
+
     return (
     
     <>
@@ -73,14 +81,15 @@ export default function MenuCard ({image,name,restName,desc,price,originalPrice,
 
             <div className="flex flex-row justify-between items-center">
                 <div className="flex flex-row justify-start items-center gap-1 lg:gap-3">
-                    {price && <p className="text-[8px] font-bold text-(--color-brand-primary)
-                    md:text-[10px] lg:text-[18px] xl:text-[20px] 2xl:text-[22px]">฿{price}</p>}
-                    {(originalPrice ?? 0) > 0 && <p className="text-[8px] font-bold text-(--color-brand-scondary) line-through
-                    md:text-[8px] lg:text-[18px] xl:text-[20px] 2xl:text-[22px]">฿{originalPrice}</p>}
+                    {finalPrice && (<p className="text-[8px] font-bold text-(--color-brand-primary)
+                    md:text-[10px] lg:text-[18px] xl:text-[20px] 2xl:text-[22px]">฿{finalPrice}</p>)}
+
+                    {(hasDiscount && original) && <p className="text-[8px] font-bold text-(--color-brand-scondary) line-through
+                    md:text-[8px] lg:text-[18px] xl:text-[20px] 2xl:text-[22px]">฿{original}</p>}
                 </div>
                 <div className="px-1 bg-[rgba(var(--rgb-brand-primary)/0.15)] rounded-full font-bold text-[8px] text-(--color-brand-primary)
                 md:text-[10px] lg:text-[18px] xl:text-[20px] 2xl:text-[22px]">
-                    {(discount ?? 0) > 0 && <p>-{discount}%</p>}
+                    {hasDiscount && <p>-{discount}%</p>}
                 </div>
             </div>
 
