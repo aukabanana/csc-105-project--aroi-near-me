@@ -1,20 +1,20 @@
 import NavBar from '../../components/layouts/NavBar'
 import Footer from '../../components/layouts/Footer'
 import Logo from '../../components/layouts/Logo'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import PillSort from '../../components/ui/PillSort'
 import mainCover from '../../assets/images/Main.png'
 import PromotionHeader from '../../components/sections/PromotionHeader'
 import RestaurantHeader from '../../components/sections/Restaurant'
-// import MenuCard, { type MenuCardProps } from '../../components/cards/MenuCards';
 import PromotionCard, {type ProCardProps}   from '../../components/cards/PromotionCard';
-import RestaurantCard, { type RestCardProps} from '../../components/cards/RestaurantCard';
+import RestaurantCard from '../../components/cards/RestaurantCard';
+import { getRestaurants } from '../../api/aroi'
+import type { Restaurant } from '../../types/aroi'
 //Mock data section
 import sushi from '../../assets/img/mockCardImage/sushi.jpg';
 import dishSushi from '../../assets/img/mockCardImage/dish-sushi.jpg';
-import restJapan from '../../assets/img/background/restJapan.jpg';
 
 const proMenuCard: ProCardProps[] = [
   {
@@ -71,35 +71,28 @@ const proMenuCard: ProCardProps[] = [
   },
 ]
 
-
-const RestCard: RestCardProps[] = [
-  {
-    image: restJapan,
-    restName: "omakase-shin",
-    desc: "lorem lorem lorem lorem lorem lorem lorem lorem ",
-    admin: true,
-  },
-  {
-    image: restJapan,
-    restName: "omakase-shin",
-    desc: "lorem lorem lorem lorem lorem lorem lorem lorem ",
-    admin: true,
-  },
-  {
-    image: restJapan,
-    restName: "omakase-shin",
-    desc: "lorem lorem lorem lorem lorem lorem lorem lorem ",
-    admin: true,
-  },
-  {
-    image: restJapan,
-    restName: "omakase-shin",
-    desc: "lorem lorem lorem lorem lorem lorem lorem lorem ",
-    admin: true,
-  },
-]
- 
 export default function MainPage() {
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([])
+  const [restaurantError, setRestaurantError] = useState('')
+  const [isRestaurantLoading, setIsRestaurantLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchRestaurants() {
+      try {
+        const data = await getRestaurants()
+        setRestaurants(data.filter((restaurant) => restaurant.is_active))
+      } catch (err) {
+        setRestaurantError(
+          err instanceof Error ? err.message : 'Cannot fetch restaurants'
+        )
+      } finally {
+        setIsRestaurantLoading(false)
+      }
+    }
+
+    fetchRestaurants()
+  }, [])
+
   //LocalStorage
   // localStorage.setItem()
     return (
@@ -161,8 +154,32 @@ export default function MainPage() {
 
               <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-3 lg:grid-cols-4 lg:gap-8">
 
-                {RestCard.map((rest, r) => (
-                  <RestaurantCard key={r} {...rest} />
+                {isRestaurantLoading && (
+                  <p className="col-span-full text-sm text-(--color-brand-secondary)">
+                    Loading restaurants...
+                  </p>
+                )}
+
+                {!isRestaurantLoading && restaurantError && (
+                  <p className="col-span-full text-sm text-red-400">
+                    {restaurantError}
+                  </p>
+                )}
+
+                {!isRestaurantLoading && !restaurantError && restaurants.length === 0 && (
+                  <p className="col-span-full text-sm text-(--color-brand-secondary)">
+                    No restaurants found.
+                  </p>
+                )}
+
+                {!isRestaurantLoading && !restaurantError && restaurants.map((rest) => (
+                  <RestaurantCard
+                    key={rest.id}
+                    image={rest.banner}
+                    restName={rest.name}
+                    desc={rest.address}
+                    admin
+                  />
                 ))}
 
               </div>
