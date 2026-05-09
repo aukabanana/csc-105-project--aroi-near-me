@@ -148,7 +148,7 @@ function ModalRestaurantForm({
                     duration-300 cursor-pointer" onClick={(e) => {
                         e.preventDefault()
                         onClose()
-                    }}>Cencel</button>
+                    }}>Cancel</button>
 
                     <button 
                     className="border border-(--color-state-success) text-(--color-state-success)

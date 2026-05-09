@@ -10,6 +10,11 @@ interface ApiError {
     message: string;
 }
 
+interface DeleteResponse<T> {
+  message: string;
+  data: T;
+}
+
 export function getErrorMessage(err: unknown): string {
     const error = err as AxiosError<ApiError>;
     return error.response?.data?.message ?? "Something went wrong";
@@ -33,7 +38,6 @@ export async function createRestaurant(data: RestaurantFormData): Promise<Restau
     }
 }
 
-
 export async function updateRestaurant(
     id: string,
     data: Partial<RestaurantFormData>
@@ -44,6 +48,19 @@ export async function updateRestaurant(
     } catch (err) {
         throw new Error(getErrorMessage(err));
     }
+}
+
+export async function deleteRestaurant(
+  id: string
+): Promise<DeleteResponse<Restaurant>> {
+  try {
+    const response = await api.delete<DeleteResponse<Restaurant>>(
+      `/restaurant/${id}`
+    );
+    return response.data;
+  } catch (err) {
+    throw new Error(getErrorMessage(err));
+  }
 }
 
 export async function getMenus(): Promise<Menu[]> {

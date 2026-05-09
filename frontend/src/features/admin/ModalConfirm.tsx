@@ -1,8 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from '@fortawesome/free-solid-svg-icons' 
 
+type ModalConfirmProps = {
+    onClose: () => void
+    onConfirm: () => void
+    loading?: boolean
+}
 
-function ModalConfirm({onClose} : {onClose : ()=> void}) {
+function ModalConfirm({onClose, onConfirm, loading = false}: ModalConfirmProps) {
     return (
         <div className="fixed inset-0 z-40 bg-white/20 flex justify-center items-center"
          onClick={onClose}>
@@ -32,13 +37,18 @@ function ModalConfirm({onClose} : {onClose : ()=> void}) {
                         onClose()
                     }}>Cancel</button>
 
-                    <button className="border border-(--color-state-success) text-(--color-state-success)
+                    <button 
+                    disabled={loading} 
+                    className="border border-(--color-state-success) text-(--color-state-success)
                     text-sm md:text-lg px-[clamp(9px,2.5vw,18px)] py-[clamp(3px,2.5vw,6px)] rounded-full 
                     bg-(--color-state-success)/20 hover:text-(--color-text-primary) hover:bg-(--color-state-success)
-                    duration-300 cursor-pointer" onClick={(e)=> {
+                    duration-300 cursor-pointer" 
+                    onClick={(e)=> {
                         e.preventDefault()
-                        onClose()
-                    }}>Confirm</button>
+                        onConfirm()
+                    }}>
+                        {loading ? 'Deleting' : 'Confirm'}
+                    </button>
                 </div>
             </div>
         </div>

@@ -7,6 +7,7 @@ import ModalConfirm from "../../features/admin/ModalConfirm";
 import UpdateRest from "../ui/UpdateRest"
 
 import { isAdminUser } from "../../features/auth/auth";
+import { deleteRestaurant,getErrorMessage} from "../../api/aroi";
 
 export type RestCardProps = {
     id: string;
@@ -20,7 +21,23 @@ export default function RestaurantCard ({id,image,restName,desc,admin}:RestCardP
 
     const [openDel, setOpenDel] = useState(false)
     const [openRest, setOpenRest] = useState(false)
+    const [deleting, setDeleting] = useState(false)
     const navigate = useNavigate()
+
+    const handleDeleteRestaurant = async () => {
+        try {
+            setDeleting(true);
+
+            await deleteRestaurant(id);
+
+            setOpenDel(false);
+            window.location.reload();
+        } catch (err) {
+            console.log(getErrorMessage(err));
+        } finally {
+            setDeleting(false);
+        }
+    };
 
     return (
 
@@ -74,7 +91,12 @@ export default function RestaurantCard ({id,image,restName,desc,admin}:RestCardP
                         <DeleteRest onDeleteRest={(e) => {
                             setOpenDel(true)
                             e.stopPropagation()}}/>
-                        {openDel && <ModalConfirm onClose={()=> setOpenDel(false)}/>}
+                        {openDel && 
+                            <ModalConfirm 
+                                onClose={()=> setOpenDel(false)}
+                                onConfirm={handleDeleteRestaurant}
+                                loading={deleting}    
+                            />}
                     </div>
                 </div>
             }

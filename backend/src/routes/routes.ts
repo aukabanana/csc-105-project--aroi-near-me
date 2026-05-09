@@ -11,7 +11,7 @@ router.post('/create-restaurant', authenticate, controller.createRestaurant)
 router.get('/menu-by-name/:name', controller.getMenuByName) //TODO
 router.patch("/menu/:id", authenticate, controller.updateMenu) //TODO
 router.delete("/menu/:id", authenticate, controller.deleteMenu) //TODO
-router.patch("/restaurant/:id", authenticate, controller.updateRestaurant) //TODO
+router.patch("/restaurant/:id", authenticate, controller.updateRestaurant)
 router.delete("/restaurant/:id", authenticate, controller.deleteRestaurant) //TODO
 
 export default router
