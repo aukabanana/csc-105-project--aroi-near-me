@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -8,32 +9,44 @@ import { faLock } from "@fortawesome/free-solid-svg-icons"
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons"
 import cover2 from '../../assets/images/bcover.png'
 
+import { loginAdmin } from "../../api/aroi";
+import { getErrorMessage } from "../../api/aroi";
 
 const adminSchema = z.object({
-    username: z.string().min(1),
-    pass: z.string()
-}).refine((data) => data.username == 'AroiNearMe' && data.pass == 'aroiAdmin',{
-    message: "Invalid username or password",
-    path: ['pass'],
-})
+  username: z.string().min(1, "Username is required"),
+  password: z.string().min(1, "Password is required"),
+});
 
-type UsernameData = z.infer<typeof adminSchema>
+type AdminLoginFormData = z.infer<typeof adminSchema>;
 
 function LoginPage() {
     const navigate = useNavigate()
+    const [loginError, setLoginError] = useState('')
     
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<UsernameData>({
+    } = useForm<AdminLoginFormData>({
         resolver: zodResolver(adminSchema)
     })
 
-    const submitForm = (admin: UsernameData) => {
-        console.log("Logged in successful", admin)
-        navigate('/MainPage')
-    }
+    const submitForm = async (admin: AdminLoginFormData) => {
+        try {
+            setLoginError("");
+
+            const result = await loginAdmin(admin);
+
+            localStorage.setItem("isAdminLoggedIn", "true");
+            localStorage.setItem("adminUsername", result.username);
+
+            console.log("Login success:", result);
+
+            navigate("/MainPage");
+        } catch (err) {
+            setLoginError(getErrorMessage(err));
+        }
+    };
 
     return(
         <div className="w-full min-h-screen relative overflow-hidden bg-black">
@@ -82,11 +95,12 @@ function LoginPage() {
                                 <input 
                                     type="password"
                                     placeholder="Enter password"
-                                    {...register('pass')}
+                                    {...register('password')}
                                     className="w-full py-2 md:py-3 text-lg md:text-xl outline-none bg-transparent text-(--color-brand-secondary)"
                                 />
                             </div>
-                            { errors.pass && <span className="text-(--color-brand-primary)">{errors.pass.message}</span>}
+                            { errors.password && <span className="text-(--color-brand-primary)">{errors.password.message}</span>}
+                            { loginError && <span className="text-(--color-brand-primary)">{loginError}</span>}
 
 
                             <div className="pt-5 flex justify-center">

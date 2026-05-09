@@ -10,7 +10,7 @@ export const adminSchema = z.object({
     password: z.string()
 })
 
-export const loginAdmin = async (req: Request, res: Response) => {
+export const  loginAdmin = async (req: Request, res: Response) => {
     try {
         const result = adminSchema.safeParse(req.body)
         if (!result.success) {
@@ -49,8 +49,8 @@ export const loginAdmin = async (req: Request, res: Response) => {
         }) 
         
         res.status(200).json({message: 'login successfully',
-            username: username,
-            password: password
+            username: admin.username,
+            // password: password
         })
 
     } catch (error) {

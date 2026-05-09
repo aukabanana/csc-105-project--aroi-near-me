@@ -48,15 +48,15 @@ export interface Admin {
     password: string;
 }
 
-export interface AdminLoginFormData {
+export type AdminLoginFormData = {
     username: string;
     password: string;
-}
+};
 
-export interface AdminLoginResponse {
+export type AdminLoginResponse = {
     message: string;
     username: string;
-}
+};
 
 export interface AdminLogoutResponse {
     message: string;

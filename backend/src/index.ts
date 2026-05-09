@@ -13,7 +13,10 @@ if (!PORT) throw new Error(`PORT is missing in your env file`);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors({ origin: process.env.CORS_ORIGIN }));
+app.use(cors({ 
+    origin: process.env.CORS_ORIGIN,
+    credentials: true
+}));
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(routers);

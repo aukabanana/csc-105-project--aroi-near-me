@@ -1,15 +1,16 @@
 import axios, { type AxiosError } from "axios";
-import type { Restaurant, Menu } from "../types/aroi";
+import type { Restaurant, Menu, AdminLoginFormData, AdminLoginResponse, AdminLogoutResponse } from "../types/aroi";
 
 const api = axios.create({
     baseURL: "http://localhost:3000/",
+    withCredentials: true
 });
 
 interface ApiError {
     message: string;
 }
 
-function getErrorMessage(err: unknown): string {
+export function getErrorMessage(err: unknown): string {
     const error = err as AxiosError<ApiError>;
     return error.response?.data?.message ?? "Something went wrong";
 }
@@ -31,3 +32,23 @@ export async function getMenus(): Promise<Menu[]> {
         throw new Error(getErrorMessage(err));
     }
 }
+
+export async function loginAdmin(data: AdminLoginFormData): Promise<AdminLoginResponse> {
+    try {
+        const response = await api.post<AdminLoginResponse>("/login-admin", data);
+        return response.data;
+    } catch (err) {
+        throw new Error(getErrorMessage(err));
+    }
+}
+
+export async function logoutAdmin(): Promise<AdminLogoutResponse> {
+    try {
+        const response = await api.post<AdminLogoutResponse>("/logout-admin");
+        return response.data;
+    } catch (err) {
+        throw new Error(getErrorMessage(err));
+    }
+}
+
+export { api };
