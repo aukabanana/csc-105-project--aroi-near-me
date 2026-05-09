@@ -6,14 +6,18 @@ import cookieParser from "cookie-parser";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import routers from './routes/routes.js'
 import authroute from './routes/auth.route.js'
+import path from "path"
 
 const app = express();
 const PORT = process.env.PORT;
+
 if (!PORT) throw new Error(`PORT is missing in your env file`);
+
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")))
 
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors({ 
+app.use(cors({
     origin: process.env.CORS_ORIGIN,
     credentials: true
 }));
