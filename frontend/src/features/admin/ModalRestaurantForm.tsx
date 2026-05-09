@@ -69,6 +69,7 @@ function ModalRestaurantForm({
 
             onSuccess?.()
             onClose()
+            window.location.reload()
         } catch (err) {
             setError(getErrorMessage(err))
         } finally {
