@@ -150,12 +150,15 @@ export const createRestaurant = async (req: Request, res: Response) => {
 export const updateRestaurant = async (req: Request, res: Response) => {
     try {
         const id = req.params.id as string
+        const body = partialRestaurant.parse(req.body)
+
         const data = await prisma.restaurant.update({
             where: {
                 id: id
             },
-            data: req.body
+            data: body
         })
+        
         res.status(200).json(data)
     } catch (error) {
         if (error instanceof ZodError)

@@ -55,7 +55,21 @@ export default function RestaurantCard ({id,image,restName,desc,admin}:RestCardP
                         onUpdateRest={(e) => {
                             setOpenRest(true)
                             e.stopPropagation()}}/>
-                        {openRest && <ModalRestaurantForm onClose={() => setOpenRest(false)}/>}
+                        {openRest && (
+                            <ModalRestaurantForm
+                                mode="update"
+                                restaurantId={id}
+                                defaultValues={{
+                                    name: restName,
+                                    banner: image,
+                                    address: desc,
+                                }}
+                                onClose={() => setOpenRest(false)}
+                                onSuccess={() => {
+                                    window.location.reload()
+                                }}
+                            />
+                        )}
                         
                         <DeleteRest onDeleteRest={(e) => {
                             setOpenDel(true)

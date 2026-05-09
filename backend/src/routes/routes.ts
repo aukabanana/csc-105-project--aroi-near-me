@@ -7,7 +7,7 @@ const router = Router()
 router.get('/menus', controller.getAllMenu)
 router.post('/create-menu', authenticate, controller.createMenu) //TODO
 router.get('/restaurants', controller.getAllRestaurant)
-router.post('/create-restaurant', authenticate, controller.createRestaurant) //TODO
+router.post('/create-restaurant', authenticate, controller.createRestaurant)
 router.get('/menu-by-name/:name', controller.getMenuByName) //TODO
 router.patch("/menu/:id", authenticate, controller.updateMenu) //TODO
 router.delete("/menu/:id", authenticate, controller.deleteMenu) //TODO

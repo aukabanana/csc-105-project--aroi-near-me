@@ -33,6 +33,19 @@ export async function createRestaurant(data: RestaurantFormData): Promise<Restau
     }
 }
 
+
+export async function updateRestaurant(
+    id: string,
+    data: Partial<RestaurantFormData>
+): Promise<Restaurant> {
+    try {
+        const response = await api.patch<Restaurant>(`/restaurant/${id}`, data);
+        return response.data;
+    } catch (err) {
+        throw new Error(getErrorMessage(err));
+    }
+}
+
 export async function getMenus(): Promise<Menu[]> {
     try {
         const response = await api.get<Menu[]>("/menus");
