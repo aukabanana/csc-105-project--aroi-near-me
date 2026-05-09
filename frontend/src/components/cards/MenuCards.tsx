@@ -63,7 +63,7 @@ export default function MenuCard ({image,name,restName,desc,price,originalPrice,
             {type && <div className="px-2 py-px bg-[rgba(var(--rgb-bg-default)/0.5)] rounded-full float-end">{type}</div>}
         </div>
 
-        <div className="relative rounded-[10px] h-[70%] md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl">
+        <div className="relative rounded-[10px] h-[70%] max-h-[300px] md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl">
             <img src={image} alt="" className="rounded-t-[10px] w-full h-full object-cover md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl" />
             <div className="absolute inset-0 pointer-events-none rounded-t-[10px] [box-shadow:inset_0_-52px_24px_-24px_var(--color-bg-surface)]"></div>
         </div>
