@@ -50,5 +50,3 @@ export async function logoutAdmin(): Promise<AdminLogoutResponse> {
         throw new Error(getErrorMessage(err));
     }
 }
-
-export { api };
