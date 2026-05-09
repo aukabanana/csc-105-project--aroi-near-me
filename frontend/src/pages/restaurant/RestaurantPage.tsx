@@ -9,6 +9,8 @@ import { useEffect, useState } from 'react';
 import { getMenus, getRestaurants } from '../../api/aroi';
 import type { Menu, Restaurant } from '../../types/aroi';
 
+import { isAdminUser } from "../../features/auth/auth"
+
 function RestaurantPage() {
     const [open, setOpen] = useState(false)
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null)
@@ -73,9 +75,11 @@ function RestaurantPage() {
                         <h1 className='text-3xl md:text-5xl font-extrabold'>{restaurant.name}</h1>
                         <hr className="flex-1 h-0.5 bg-gray-600 border-0 mx-2 md:mx-4" />
 
+                    {isAdminUser() &&
                         <button className="rounded-3xl text-(--color-brand-secondary) hover:text-white font-bold bg-(--color-brand-secondary)/20 border-2 hover:bg-(--color-brand-secondary)
                     border-(--color-brand-secondary) px-[clamp(3px,2.5vw,8px)] py-1 transition-colors duration-300 cursor-pointer text-xs md:text-xl"
                         onClick={()=> setOpen(true)}>+ Menu</button>
+                    }
                         {open && <ModalPromotionsForm onClose={()=> setOpen(false)}/>}
 
                     </div>

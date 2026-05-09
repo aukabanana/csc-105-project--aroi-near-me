@@ -9,6 +9,8 @@ import ModalConfirm from "../../features/admin/ModalConfirm";
 import ModalPromotionsForm from "../../features/admin/ModalPromotionsForm";
 import ModalAvailable from "../modals/MenuAvailable";
 
+import { isAdminUser } from "../../features/auth/auth"
+
 export type MenuCardProps = {
     image: string;
     name: string;
@@ -93,7 +95,7 @@ export default function MenuCard ({image,name,restName,desc,price,originalPrice,
                 </div>
             </div>
 
-            {admin &&
+            {admin && isAdminUser() &&
                 <div className="flex flex-row justify-end items-center">
                     <div className="flex flex-row justify-start items-center gap-1 lg:gap-3">
                         <UpdateBtn onUpdate={()=> {

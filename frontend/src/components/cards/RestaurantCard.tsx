@@ -4,7 +4,9 @@ import ModalRestaurantForm from "../../features/admin/ModalRestaurantForm";
 
 import { useState } from "react";
 import ModalConfirm from "../../features/admin/ModalConfirm";
-import UpdateRest from "../ui/UpdateRest";
+import UpdateRest from "../ui/UpdateRest"
+
+import { isAdminUser } from "../../features/auth/auth";
 
 export type RestCardProps = {
     id: string;
@@ -19,6 +21,7 @@ export default function RestaurantCard ({id,image,restName,desc,admin}:RestCardP
     const [openDel, setOpenDel] = useState(false)
     const [openRest, setOpenRest] = useState(false)
     const navigate = useNavigate()
+
     return (
 
       <div className="aspect-auto relative w-full min-h-50 h-auto bg-(--color-bg-surface) [box-shadow:0_0_1px_0_var(--color-text-primary)] rounded-[10px] flex flex-col cursor-pointer
@@ -44,7 +47,7 @@ export default function RestaurantCard ({id,image,restName,desc,admin}:RestCardP
                 </div>
             </div>
 
-            {admin &&
+            {admin && isAdminUser() &&
                 <div className="flex flex-row justify-end items-center">
                     <div className="flex flex-row justify-start items-center gap-1 lg:gap-3">
 
