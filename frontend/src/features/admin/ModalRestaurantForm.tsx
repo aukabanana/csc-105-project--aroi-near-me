@@ -28,33 +28,43 @@ function ModalRestaurantForm({
     const [name, setName] = useState(defaultValues?.name ?? "")
     const [address, setAddress] = useState(defaultValues?.address ?? "")
     const [banner, setBanner] = useState(defaultValues?.banner ?? "")
+    const [imageFile, setImageFile] = useState<File | null>(null)
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0]
+    const file = e.target.files?.[0]
+
         if (file) {
             const previewUrl = URL.createObjectURL(file)
             setPreview(previewUrl)
-            setBanner(previewUrl)
+            setImageFile(file)
         }
     }
 
-    const handleSubmitRestaurant = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleSubmitRestaurant = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
         try {
             setError("")
             setLoading(true)
 
+            const formData = new FormData()
+            formData.append("name", name)
+            formData.append("address", address)
+
+            if (imageFile) {
+                formData.append("image", imageFile)
+            }
+
             if (mode === "update") {
                 if (!restaurantId) {
                     throw new Error("Restaurant ID is required")
                 }
 
-                await updateRestaurant(restaurantId, {name, address, banner,})
+                await updateRestaurant(restaurantId, formData)
             } else {
-                await createRestaurant({name, address, banner,})
+                await createRestaurant(formData)
             }
 
             onSuccess?.()
@@ -79,7 +89,8 @@ function ModalRestaurantForm({
                     </p>
                     <hr className="flex-1 border-t-px border-white"/>
                 </div>
-                <form>
+
+                <form onSubmit={handleSubmitRestaurant} encType="multipart/form-data">
                     <div className="flex flex-col gap-[clamp(2px,2.5vw,4px)]">
                         <label htmlFor="restName">Restaurant Name</label>
                         <input 
@@ -103,9 +114,7 @@ function ModalRestaurantForm({
                         onChange={(e) => setAddress(e.target.value)}>
                         </textarea>
                     </div>
-                </form>
 
-                <form>
                     <label className="relative flex flex-col items-center justify-center w-full mt-6 p-5 rounded-md border-2 border-dashed border-(--color-brand-secondary)">
                         {preview || banner ? (
                             <img src={preview ?? banner} alt="Preview" className='box-border h-60'/>
@@ -114,12 +123,12 @@ function ModalRestaurantForm({
                         )}
 
                         <div className=''>
-                            <input type="file"
+                            <input type="file" name="image"
                             className='hidden cursor-pointer'
                             accept='image/*'
                             onChange={handleFileChange}
                             />
-                        </div>
+                        </div> 
                     </label>
                     {(preview || banner) && (
                         <button
@@ -134,35 +143,36 @@ function ModalRestaurantForm({
                         }}
                         >Remove Image</button>
                     )}
+                    
+                    {error && (
+                    <p className="mt-4 text-(--color-brand-primary) font-bold">{error}</p>
+                    )}
+
+                    <div className='flex flex-row mt-5 md:mt-7 mb-5 md:mb-7 gap-5 float-end'>
+                        <button 
+                        className="border border-(--color-brand-primary) text-(--color-brand-primary) 
+                        text-sm md:text-lg px-[clamp(9px,2.5vw,18px)] py-[clamp(3px,2.5vw,6px)] rounded-full 
+                        bg-(--color-brand-primary)/20 hover:text-(--color-text-primary) hover:bg-(--color-brand-primary)
+                        duration-300 cursor-pointer" 
+                        onClick={onClose}
+                        type="button"
+                        >Cancel</button>
+
+                        <button 
+                        className="border border-(--color-state-success) text-(--color-state-success)
+                        text-sm md:text-lg px-[clamp(9px,2.5vw,18px)] py-[clamp(3px,2.5vw,6px)] rounded-full 
+                        bg-(--color-state-success)/20 hover:text-(--color-text-primary) hover:bg-(--color-state-success)
+                        duration-300 cursor-pointer" 
+                        disabled={loading}
+                        type="submit">
+                            {loading 
+                                ? mode === 'update' ? 'Updating...' : 'Creating...'
+                                : mode === 'update' ? 'Update' : 'Create' 
+                            }
+                        </button>
+                    </div>
                 </form>
                 
-                {error && (
-                <p className="mt-4 text-(--color-brand-primary) font-bold">{error}</p>
-                )}
-
-                <div className='flex flex-row mt-5 md:mt-7 mb-5 md:mb-7 gap-5 float-end'>
-                    <button 
-                    className="border border-(--color-brand-primary) text-(--color-brand-primary) 
-                    text-sm md:text-lg px-[clamp(9px,2.5vw,18px)] py-[clamp(3px,2.5vw,6px)] rounded-full 
-                    bg-(--color-brand-primary)/20 hover:text-(--color-text-primary) hover:bg-(--color-brand-primary)
-                    duration-300 cursor-pointer" onClick={(e) => {
-                        e.preventDefault()
-                        onClose()
-                    }}>Cancel</button>
-
-                    <button 
-                    className="border border-(--color-state-success) text-(--color-state-success)
-                    text-sm md:text-lg px-[clamp(9px,2.5vw,18px)] py-[clamp(3px,2.5vw,6px)] rounded-full 
-                    bg-(--color-state-success)/20 hover:text-(--color-text-primary) hover:bg-(--color-state-success)
-                    duration-300 cursor-pointer" 
-                    disabled={loading}
-                    onClick={handleSubmitRestaurant}>
-                        {loading 
-                            ? mode === 'update' ? 'Updating...' : 'Creating...'
-                            : mode === 'update' ? 'Update' : 'Create' 
-                        }
-                    </button>
-                </div>
             </div>
         </div>
     )

@@ -29,7 +29,7 @@ export async function getRestaurants(): Promise<Restaurant[]> {
     }
 }
 
-export async function createRestaurant(data: RestaurantFormData): Promise<Restaurant> {
+export async function createRestaurant(data: FormData): Promise<Restaurant> {
     try {
         const response = await api.post<Restaurant>("/create-restaurant", data);
         return response.data;
@@ -40,7 +40,7 @@ export async function createRestaurant(data: RestaurantFormData): Promise<Restau
 
 export async function updateRestaurant(
     id: string,
-    data: Partial<RestaurantFormData>
+    data: FormData
 ): Promise<Restaurant> {
     try {
         const response = await api.patch<Restaurant>(`/restaurant/${id}`, data);

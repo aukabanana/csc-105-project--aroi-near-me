@@ -19,6 +19,10 @@ export type RestCardProps = {
 
 export default function RestaurantCard ({id,image,restName,desc,admin}:RestCardProps) {
 
+    const API_URL = "http://localhost:3000"
+
+    const imageUrl = image.startsWith("http") ? image : `${API_URL}${image}`
+
     const [openDel, setOpenDel] = useState(false)
     const [openRest, setOpenRest] = useState(false)
     const [deleting, setDeleting] = useState(false)
@@ -48,7 +52,7 @@ export default function RestaurantCard ({id,image,restName,desc,admin}:RestCardP
         onClick={()=> navigate(`/restaurant/${id}`)}>
 
         <div className="relative rounded-[10px] h-[70%] max-h-[300px] md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl">
-            <img src={image} alt="" className="rounded-t-[10px] w-full h-full object-cover md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl" />
+            <img src={imageUrl} alt={restName} className="rounded-t-[10px] w-full h-full object-cover md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl" />
             <div className="absolute inset-0 pointer-events-none rounded-t-[10px] [box-shadow:inset_0_-52px_24px_-24px_var(--color-bg-surface)]"></div>
         </div>
 
@@ -78,7 +82,7 @@ export default function RestaurantCard ({id,image,restName,desc,admin}:RestCardP
                                 restaurantId={id}
                                 defaultValues={{
                                     name: restName,
-                                    banner: image,
+                                    banner: imageUrl,
                                     address: desc,
                                 }}
                                 onClose={() => setOpenRest(false)}

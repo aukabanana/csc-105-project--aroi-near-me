@@ -12,6 +12,8 @@ import type { Menu, Restaurant } from '../../types/aroi';
 import { isAdminUser } from "../../features/auth/auth"
 
 function RestaurantPage() {
+    const API_URL = "http://localhost:3000"
+
     const [open, setOpen] = useState(false)
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null)
     const [menus, setMenus] = useState<Menu[]>([])
@@ -92,11 +94,16 @@ function RestaurantPage() {
                             <p className='text-xs md:text-lg text-(--color-brand-secondary)'>{restaurant.address}</p>
                         </div>
                         <div className='flex justify-end'>
-                            <img
-                            src={restaurant.banner}
-                            alt={restaurant.name}
-                            className='max-w-full md:w-100 lg:w-150 h-auto object-contain rounded-2xl'
-                            />
+                            {(() => {
+                                const bannerUrl = restaurant.banner.startsWith("http") ? restaurant.banner : `${API_URL}${restaurant.banner}`
+                                return (
+                                    <img
+                                    src={bannerUrl}
+                                    alt={restaurant.name}
+                                    className='max-w-full md:w-100 lg:w-150 h-auto object-contain rounded-2xl'
+                                    />
+                                )
+                            })()}
                         </div>
                     </div>
                 </div>
