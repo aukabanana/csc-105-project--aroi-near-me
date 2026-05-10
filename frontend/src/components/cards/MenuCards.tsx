@@ -12,6 +12,8 @@ import ModalAvailable from "../modals/MenuAvailable";
 import { isAdminUser } from "../../features/auth/auth"
 
 export type MenuCardProps = {
+    id: string;
+    restaurantId: string;
     image: string;
     name: string;
     restName: string;
@@ -25,7 +27,7 @@ export type MenuCardProps = {
     admin?: boolean;
 }
 
-export default function MenuCard ({image,name,restName,desc,price,originalPrice,discount,type,timer,status,admin}:MenuCardProps) {
+export default function MenuCard ({id,restaurantId,image,name,restName,desc,price,originalPrice,discount,type,timer,status,admin}:MenuCardProps) {
     
     const [openDel, setOpenDel] = useState(false)
     const [openUp, setOpenUp] = useState(false)
@@ -106,10 +108,18 @@ export default function MenuCard ({image,name,restName,desc,price,originalPrice,
                             setOpenUp(true) 
                             console.log('Update Clicked')}
                         }/>
-                        {openUp && <ModalPromotionsForm onClose={()=> setOpenUp(false)}/>}
+                        {openUp && 
+                         <ModalPromotionsForm
+                            restaurantId={restaurantId}
+                            onClose={() => setOpenUp(false)}
+                            onSuccess={() => window.location.reload()}
+                        />}
 
                         <DeleteBtn onDelete={() => {setOpenDel(true)}}/>
-                        {openDel && <ModalConfirm onClose={()=> setOpenDel(false)}/>}
+                        {openDel && 
+                        <ModalConfirm 
+                            onClose={()=> setOpenDel(false)}/>}
+        
                     </div>
                 </div>
             }
@@ -119,10 +129,12 @@ export default function MenuCard ({image,name,restName,desc,price,originalPrice,
       {openMoStatus && (
             <ModalAvailable
             onClose={() => setOpenMoStatus(false)}
+            menuId={id}
             nameMenu={name}
             descMenu={desc}
             imageMenu={image}
             statusMenu={status}
+            onSuccess={()=> window.location.reload()}
         />)}
     </>
   );

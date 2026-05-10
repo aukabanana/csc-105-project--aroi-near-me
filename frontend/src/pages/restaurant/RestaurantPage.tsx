@@ -125,6 +125,8 @@ function RestaurantPage() {
                 {menus.map((item) => (
                 <MenuCard
                     key={item.id}
+                    id={item.id}
+                    restaurantId={item.restaurant_id}
                     image={item.image}
                     name={item.name}
                     restName={restaurant.name}

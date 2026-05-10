@@ -81,6 +81,18 @@ export async function createMenu(data: FormData): Promise<Menu> {
     }
 }
 
+export async function updateMenuStatus(
+    id: string,
+    status: boolean
+): Promise<Menu> {
+    try {
+        const response = await api.patch<Menu>(`/menu/${id}`, { status });
+        return response.data;
+    } catch (err) {
+        throw new Error(getErrorMessage(err));
+    }
+}
+
 export async function loginAdmin(data: AdminLoginFormData): Promise<AdminLoginResponse> {
     try {
         const response = await api.post<AdminLoginResponse>("/login-admin", data);
