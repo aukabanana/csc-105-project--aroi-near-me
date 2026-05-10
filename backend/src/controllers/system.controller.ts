@@ -63,7 +63,12 @@ const Admin = z.object({
 //get all menu
 export const getAllMenu = async (req: Request, res: Response) => {
     try {
-        const data = await prisma.menu.findMany();
+        const data = await prisma.menu.findMany({
+            where: {
+                is_active: true
+            }
+        });
+        
         res.status(200).json(data);
     } catch (error) {
         if (error instanceof ZodError) return res.status(400).json(error.issues)

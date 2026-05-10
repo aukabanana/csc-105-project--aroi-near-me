@@ -10,6 +10,7 @@ import ModalPromotionsForm from "../../features/admin/ModalPromotionsForm";
 import ModalAvailable from "../modals/MenuAvailable";
 
 import { isAdminUser } from "../../features/auth/auth"
+import { deleteMenu, getErrorMessage } from "../../api/aroi";
 
 export type MenuCardProps = {
     id: string;
@@ -32,6 +33,7 @@ export default function MenuCard ({id,restaurantId,image,name,restName,desc,pric
     const [openDel, setOpenDel] = useState(false)
     const [openUp, setOpenUp] = useState(false)
     const [openMoStatus, setOpenMoStatus] = useState(false)
+    const [deleting, setDeleting] = useState(false)
 
     const hasDiscount = (discount ?? 0) > 0;
 
@@ -44,6 +46,21 @@ export default function MenuCard ({id,restaurantId,image,name,restName,desc,pric
     const API_URL = "http://localhost:3000"
 
     const imageUrl = image.startsWith("http") ? image : `${API_URL}${image}`
+
+    const handleDeleteMenu = async () => {
+        try {
+            setDeleting(true)
+
+            await deleteMenu(id)
+
+            setOpenDel(false)
+            window.location.reload()
+        } catch (err) {
+            console.log(getErrorMessage(err))
+        } finally {
+            setDeleting(false)
+        }
+    }
 
     return (
     
@@ -128,10 +145,13 @@ export default function MenuCard ({id,restaurantId,image,name,restName,desc,pric
                         )}
 
                         <DeleteBtn onDelete={() => {setOpenDel(true)}}/>
-                        {openDel && 
-                        <ModalConfirm 
-                            onClose={()=> setOpenDel(false)}/>}
-        
+                        {openDel && (
+                            <ModalConfirm
+                                onClose={() => setOpenDel(false)}
+                                onConfirm={handleDeleteMenu}
+                                loading={deleting}
+                            />
+                        )}
                     </div>
                 </div>
             }

@@ -1,5 +1,5 @@
 import axios, { type AxiosError } from "axios";
-import type { Restaurant, Menu, MenuFormData, AdminLoginFormData, AdminLoginResponse, AdminLogoutResponse } from "../types/aroi";
+import type { Restaurant, Menu, AdminLoginFormData, AdminLoginResponse, AdminLogoutResponse } from "../types/aroi";
 
 const api = axios.create({
     baseURL: "http://localhost:3000/",
@@ -103,6 +103,17 @@ export async function updateMenu(
     } catch (err) {
         throw new Error(getErrorMessage(err))
     }
+}
+
+export async function deleteMenu(
+  id: string
+): Promise<DeleteResponse<Menu>> {
+  try {
+    const response = await api.delete<DeleteResponse<Menu>>(`/menu/${id}`);
+    return response.data;
+  } catch (err) {
+    throw new Error(getErrorMessage(err));
+  }
 }
 
 export async function loginAdmin(data: AdminLoginFormData): Promise<AdminLoginResponse> {
