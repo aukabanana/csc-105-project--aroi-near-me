@@ -39,6 +39,10 @@ export default function MenuCard ({image,name,restName,desc,price,originalPrice,
     ? Math.round(original * (1 - discount! / 100))
     : price;
 
+    const API_URL = "http://localhost:3000"
+
+    const imageUrl = image.startsWith("http") ? image : `${API_URL}${image}`
+
     return (
     
     <>
@@ -64,7 +68,7 @@ export default function MenuCard ({image,name,restName,desc,price,originalPrice,
         </div>
 
         <div className="relative rounded-[10px] h-[70%] max-h-[300px] md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl">
-            <img src={image} alt="" className="rounded-t-[10px] w-full h-full object-cover md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl" />
+            <img src={imageUrl} alt={restName} className="rounded-t-[10px] w-full h-full object-cover md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl" />
             <div className="absolute inset-0 pointer-events-none rounded-t-[10px] [box-shadow:inset_0_-52px_24px_-24px_var(--color-bg-surface)]"></div>
         </div>
 

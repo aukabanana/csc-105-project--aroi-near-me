@@ -1,5 +1,5 @@
 import axios, { type AxiosError } from "axios";
-import type { Restaurant, RestaurantFormData, Menu, AdminLoginFormData, AdminLoginResponse, AdminLogoutResponse } from "../types/aroi";
+import type { Restaurant, Menu, AdminLoginFormData, AdminLoginResponse, AdminLogoutResponse } from "../types/aroi";
 
 const api = axios.create({
     baseURL: "http://localhost:3000/",
@@ -11,8 +11,8 @@ interface ApiError {
 }
 
 interface DeleteResponse<T> {
-  message: string;
-  data: T;
+    message: string;
+    data: T;
 }
 
 export function getErrorMessage(err: unknown): string {
@@ -51,21 +51,30 @@ export async function updateRestaurant(
 }
 
 export async function deleteRestaurant(
-  id: string
+    id: string
 ): Promise<DeleteResponse<Restaurant>> {
-  try {
-    const response = await api.delete<DeleteResponse<Restaurant>>(
-      `/restaurant/${id}`
-    );
-    return response.data;
-  } catch (err) {
-    throw new Error(getErrorMessage(err));
-  }
+    try {
+        const response = await api.delete<DeleteResponse<Restaurant>>(
+            `/restaurant/${id}`
+        );
+        return response.data;
+    } catch (err) {
+        throw new Error(getErrorMessage(err));
+    }
 }
 
 export async function getMenus(): Promise<Menu[]> {
     try {
         const response = await api.get<Menu[]>("/menus");
+        return response.data;
+    } catch (err) {
+        throw new Error(getErrorMessage(err));
+    }
+}
+
+export async function createMenu(data: FormData): Promise<Menu> {
+    try {
+        const response = await api.post<Menu>("/create-menu", data);
         return response.data;
     } catch (err) {
         throw new Error(getErrorMessage(err));

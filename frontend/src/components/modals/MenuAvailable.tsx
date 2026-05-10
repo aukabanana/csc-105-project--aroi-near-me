@@ -12,6 +12,11 @@ type ModalAvailableProps = {
 }
 
 function ModalAvailable({onClose , nameMenu, descMenu, statusMenu, imageMenu} : ModalAvailableProps) {
+    
+    const API_URL = "http://localhost:3000"
+
+    const imageUrl = imageMenu.startsWith("http") ? imageMenu : `${API_URL}${imageMenu}`
+
     return (
         <div className="fixed inset-0 z-50 bg-white/20 flex justify-center items-center" onClick={onClose}>
             <div className='absolute z-1 w-full backdrop-blur-xs bg-(--color-text-primary)/0.1 '></div>
@@ -27,7 +32,7 @@ function ModalAvailable({onClose , nameMenu, descMenu, statusMenu, imageMenu} : 
                         <div className="bg-amber-400 w-1 h-6 md:w-1.5 md:h-10"></div>
                         <div><h2 className='text-xl md:text-3xl font-bold text-(--color-brand-secondary)'>{nameMenu}</h2></div>
                     </div>
-                    <div className="flex justify-center mx-8 my-3 md:my-5"><img src={imageMenu} alt={nameMenu} className='rounded-lg md:rounded-2xl'/></div>
+                    <div className="flex justify-center mx-8 my-3 md:my-5"><img src={imageUrl} alt={nameMenu} className='rounded-lg md:rounded-2xl'/></div>
                     <hr className='my-5 mx-3'/>
                     <div className="mx-3"><p className="text-xs text-(--color-brand-secondary)">
                         <span className="text-(--color-brand-primary)">Description</span> : 

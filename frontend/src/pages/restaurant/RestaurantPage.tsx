@@ -82,7 +82,13 @@ function RestaurantPage() {
                     border-(--color-brand-secondary) px-[clamp(3px,2.5vw,8px)] py-1 transition-colors duration-300 cursor-pointer text-xs md:text-xl"
                         onClick={()=> setOpen(true)}>+ Menu</button>
                     }
-                        {open && <ModalPromotionsForm onClose={()=> setOpen(false)}/>}
+                        {open && 
+                            <ModalPromotionsForm
+                                restaurantId={restaurant.id}
+                                onClose={() => setOpen(false)}
+                                onSuccess={() => window.location.reload()}
+                            />
+                        }
 
                     </div>
             

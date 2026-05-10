@@ -22,12 +22,12 @@ const MenuTypeEnum = z.enum([
 const menuSchema = z.object({
     name: z.string().min(1),
     desc: z.string().min(1),
-    price: z.number().positive(),
-    discount: z.number().min(0).optional(),
-    type: MenuTypeEnum.default('ALL'),
-    timer: z.string().datetime().optional(),
+    price: z.coerce.number().positive(),
+    discount: z.coerce.number().min(0).optional(),
+    type: MenuTypeEnum.default("ALL"),
+    timer: z.string().optional(),
     image: z.string().min(1),
-    status: z.boolean().default(false),
+    status: z.coerce.boolean().default(false),
     restaurant_id: z.string().uuid(),
 })
 const partialMenu = menuSchema.partial();
@@ -51,13 +51,33 @@ export const getAllMenu = async (req: Request, res: Response) => {
 //create new menu
 export const createMenu = async (req: Request, res: Response) => {
     try {
-        const { name, desc, price, discount, type, timer, image, restaurant_id } = menuSchema.parse(req.body)
-        const newMenu = await prisma.menu.create({
-            data: { name, desc, price, discount, type: type as any, timer, image, restaurant_id }
+        const image = req.file ? `/uploads/img/${req.file.filename}` : ""
+
+        const data = menuSchema.parse({
+            name: req.body.name,
+            desc: req.body.desc,
+            price: req.body.price,
+            discount: req.body.discount || undefined,
+            type: req.body.type,
+            timer: req.body.timer || undefined,
+            image,
+            status: req.body.status ?? false,
+            restaurant_id: req.body.restaurant_id,
         })
-        res.status(201).json(newMenu);
+
+        const newMenu = await prisma.menu.create({
+            data: {
+                ...data,
+                type: data.type as any,
+            }
+        })
+
+        res.status(201).json(newMenu)
     } catch (error) {
-        if (error instanceof ZodError) return res.status(400).json(error.issues)
+        if (error instanceof ZodError) {
+            return res.status(400).json(error.issues)
+        }
+
         res.status(500).json(error)
     }
 }
