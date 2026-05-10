@@ -6,6 +6,7 @@ import { upload } from '../config/multer.js';
 const router = Router()
 
 router.get('/menus', controller.getAllMenu)
+router.get("/promotion-menus", controller.getPromotionMenus)
 router.post('/create-menu', authenticate,upload.single('image'), controller.createMenu)
 router.get('/restaurants', controller.getAllRestaurant)
 router.post('/create-restaurant', authenticate,upload.single('image'), controller.createRestaurant)

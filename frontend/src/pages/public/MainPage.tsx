@@ -1,79 +1,28 @@
 import NavBar from '../../components/layouts/NavBar'
 import Footer from '../../components/layouts/Footer'
 import Logo from '../../components/layouts/Logo'
+
 import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+
 import PillSort from '../../components/ui/PillSort'
 import mainCover from '../../assets/images/Main.png'
 import PromotionHeader from '../../components/sections/PromotionHeader'
 import RestaurantHeader from '../../components/sections/Restaurant'
-import PromotionCard, {type ProCardProps}   from '../../components/cards/PromotionCard';
 import RestaurantCard from '../../components/cards/RestaurantCard';
-import { getRestaurants } from '../../api/aroi'
-import type { Restaurant } from '../../types/aroi'
-//Mock data section
-import sushi from '../../assets/img/mockCardImage/sushi.jpg';
-import dishSushi from '../../assets/img/mockCardImage/dish-sushi.jpg';
 
-const proMenuCard: ProCardProps[] = [
-  {
-    image: sushi,
-    name: "Tonkotsu Ramen",
-    restName: "Sakura Kitchen",
-    desc: "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
-    price: 139,
-    originalPrice: 29,
-    discount: 78,
-    type: "Ramen",
-    timer: "11:42:12",
-    status: true,
-    admin: true
-  },
-  {
-    image: dishSushi,
-    name: "Takoyaki",
-    restName: "Sakura",
-    desc: "lorem lorem lorem lorem lorem lorem lorem",
-    price: 220,
-    originalPrice:0,
-    discount: 0,
-    type: "Sushi",
-    timer: "",
-    status: true,
-    admin: true
-  },
-  {
-    image: sushi,
-    name: "Salmon Nigiri",
-    restName: "Sakura Japanese Kitchen",
-    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's . Lorem Ipsum has been the industry's. Lorem Ipsum has been the industry's",
-    price: 129,
-    originalPrice: 180,
-    discount: 26,
-    type: "Sushi",
-    timer: "12:11:04",
-    status: true,
-    admin: true
-  },
-  {
-    image: dishSushi,
-    name: "Nigiri",
-    restName: "Sakura Kitchen",
-    desc: "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
-    price: 220,
-    originalPrice: 0,
-    discount: 0,
-    type: "Sushi",
-    timer: "",
-    status: false,
-    admin: true
-  },
-]
+import MenuCard from '../../components/cards/MenuCards'
+import { getRestaurants, getPromotionMenus } from '../../api/aroi'
+import type { Restaurant, Menu } from '../../types/aroi'
+
+//Mock data section
 
 export default function MainPage() {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([])
   const [restaurantError, setRestaurantError] = useState('')
+  const [promotionMenus, setPromotionMenus] = useState<Menu[]>([])
+  const [promotionError, setPromotionError] = useState('')
 
   useEffect(() => {
     async function fetchRestaurants() {
@@ -88,6 +37,21 @@ export default function MainPage() {
     }
 
     fetchRestaurants()
+  }, [])
+
+  useEffect(() => {
+    async function fetchPromotionMenus() {
+        try {
+            const data = await getPromotionMenus()
+            setPromotionMenus(data)
+        } catch (err) {
+            setPromotionError(
+                err instanceof Error ? err.message : 'Cannot fetch promotion menus'
+            )
+        }
+    }
+
+    fetchPromotionMenus()
   }, [])
 
   //LocalStorage
@@ -138,10 +102,37 @@ export default function MainPage() {
 
                 <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-3 lg:grid-cols-4 lg:gap-8">
 
-                  {proMenuCard.map((menu, i) => (
-                  <PromotionCard key={i} {...menu} />
-                  ))}
+                  {promotionError && (
+                    <p className="col-span-full text-sm text-red-400">
+                        {promotionError}
+                    </p>
+                )}
 
+                {!promotionError && promotionMenus.length === 0 && (
+                    <p className="col-span-full text-sm text-(--color-brand-secondary)">
+                        No promotion menus found.
+                    </p>
+                )}
+
+                {!promotionError && promotionMenus.map((item) => (
+                    <MenuCard
+                        key={item.id}
+                        id={item.id}
+                        restaurantId={item.restaurant_id}
+                        image={item.image}
+                        name={item.name}
+                        restName=""
+                        desc={item.desc}
+                        price={item.price}
+                        originalPrice={0}
+                        discount={item.discount ?? 0}
+                        type={item.type}
+                        timer={item.timer ?? undefined}
+                        status={item.status}
+                        admin
+                    />
+                ))}
+                  
                 </div>
             </section>
 

@@ -68,10 +68,41 @@ export const getAllMenu = async (req: Request, res: Response) => {
                 is_active: true
             }
         });
-        
+
         res.status(200).json(data);
     } catch (error) {
         if (error instanceof ZodError) return res.status(400).json(error.issues)
+        res.status(500).json(error)
+    }
+}
+
+// get promotion menu
+export const getPromotionMenus = async (req: Request, res: Response) => {
+    try {
+        const data = await prisma.menu.findMany({
+            where: {
+                is_active: true,
+                status: true,
+                OR: [
+                    {
+                        timer: {
+                            not: null
+                        }
+                    },
+                    {
+                        discount: {
+                            not: null
+                        }
+                    },
+                ]
+            },
+            include: {
+                restaurant: true
+            }
+        })
+
+        res.status(200).json(data)
+    } catch (error) {
         res.status(500).json(error)
     }
 }

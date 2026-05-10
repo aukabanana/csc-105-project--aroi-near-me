@@ -72,6 +72,15 @@ export async function getMenus(): Promise<Menu[]> {
     }
 }
 
+export async function getPromotionMenus(): Promise<Menu[]> {
+    try {
+        const response = await api.get<Menu[]>("/promotion-menus")
+        return response.data
+    } catch (err) {
+        throw new Error(getErrorMessage(err))
+    }
+}
+
 export async function createMenu(data: FormData): Promise<Menu> {
     try {
         const response = await api.post<Menu>("/create-menu", data);
