@@ -103,17 +103,29 @@ export default function MenuCard ({id,restaurantId,image,name,restName,desc,pric
 
             {admin && isAdminUser() &&
                 <div className="flex flex-row justify-end items-center">
-                    <div className="flex flex-row justify-start items-center gap-1 lg:gap-3">
+                    <div className="flex flex-row justify-start items-center gap-1 lg:gap-3" onClick={(e) => e.stopPropagation()}>
                         <UpdateBtn onUpdate={()=> {
                             setOpenUp(true) 
                             console.log('Update Clicked')}
                         }/>
-                        {openUp && 
-                         <ModalPromotionsForm
-                            restaurantId={restaurantId}
-                            onClose={() => setOpenUp(false)}
-                            onSuccess={() => window.location.reload()}
-                        />}
+                        {openUp && (
+                            <ModalPromotionsForm
+                                mode="update"
+                                menuId={id}
+                                restaurantId={restaurantId}
+                                defaultValues={{
+                                    name,
+                                    desc,
+                                    price: price ?? 0,
+                                    discount: discount ?? null,
+                                    type,
+                                    timer: timer ?? null,
+                                    image,
+                                }}
+                                onClose={() => setOpenUp(false)}
+                                onSuccess={() => window.location.reload()}
+                            />
+                        )}
 
                         <DeleteBtn onDelete={() => {setOpenDel(true)}}/>
                         {openDel && 

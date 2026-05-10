@@ -30,6 +30,29 @@ const menuSchema = z.object({
     status: z.coerce.boolean().default(false),
     restaurant_id: z.string().uuid(),
 })
+
+const updateMenuSchema = z.object({
+    name: z.string().min(1).optional(),
+    desc: z.string().min(1).optional(),
+    price: z.coerce.number().positive().optional(),
+
+    discount: z.preprocess(
+        (value) => value === "" || value === "null" ? null : value,
+        z.coerce.number().min(0).nullable().optional()
+    ),
+
+    type: MenuTypeEnum.optional(),
+
+    timer: z.preprocess(
+        (value) => value === "" || value === "null" ? null : value,
+        z.string().nullable().optional()
+    ),
+
+    image: z.string().min(1).optional(),
+    status: z.coerce.boolean().optional(),
+    restaurant_id: z.string().uuid().optional(),
+})
+
 const partialMenu = menuSchema.partial();
 
 const Admin = z.object({
@@ -100,16 +123,30 @@ export const getMenuByName = async (req: Request, res: Response) => {
 export const updateMenu = async (req: Request, res: Response) => {
     try {
         const id = req.params.id as string
-        const data = partialMenu.parse(req.body)
 
-        const updateMenu = await prisma.menu.update({
-            where: { id },
-            data: data
+        const image = req.file
+            ? `/uploads/img/${req.file.filename}`
+            : undefined
+
+        const data = updateMenuSchema.parse({
+            ...req.body,
+            ...(image ? { image } : {})
         })
-        res.status(200).json(updateMenu)
+
+        const updatedMenu = await prisma.menu.update({
+            where: { id },
+            data: {
+                ...data,
+                type: data.type as any,
+            }
+        })
+
+        res.status(200).json(updatedMenu)
     } catch (error) {
-        if (error instanceof ZodError)
+        if (error instanceof ZodError) {
             return res.status(400).json(error.issues)
+        }
+
         res.status(500).json(error)
     }
 }

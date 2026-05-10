@@ -1,5 +1,5 @@
 import axios, { type AxiosError } from "axios";
-import type { Restaurant, Menu, AdminLoginFormData, AdminLoginResponse, AdminLogoutResponse } from "../types/aroi";
+import type { Restaurant, Menu, MenuFormData, AdminLoginFormData, AdminLoginResponse, AdminLogoutResponse } from "../types/aroi";
 
 const api = axios.create({
     baseURL: "http://localhost:3000/",
@@ -90,6 +90,18 @@ export async function updateMenuStatus(
         return response.data;
     } catch (err) {
         throw new Error(getErrorMessage(err));
+    }
+}
+
+export async function updateMenu(
+    id: string,
+    data: FormData
+): Promise<Menu> {
+    try {
+        const response = await api.patch<Menu>(`/menu/${id}`, data)
+        return response.data
+    } catch (err) {
+        throw new Error(getErrorMessage(err))
     }
 }
 

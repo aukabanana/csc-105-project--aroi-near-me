@@ -2,27 +2,44 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faUtensils } from "@fortawesome/free-solid-svg-icons"
 import { useState } from 'react'
 import SortType from "../../components/ui/SortType"
-import { createMenu,getErrorMessage } from "../../api/aroi"
+import { createMenu,updateMenu,getErrorMessage } from "../../api/aroi"
+
+type MenuFormValues = {
+    name: string
+    desc: string
+    price: number
+    discount?: number | null
+    type: string
+    timer?: string | null
+    image: string
+}
 
 type ModalPromotionsFormProps = {
     onClose: () => void
     restaurantId: string
+    mode?: "create" | "update"
+    menuId?: string
+    defaultValues?: MenuFormValues
     onSuccess?: () => void
 }
 
-function ModalPromotionsForm({
-    onClose, restaurantId, onSuccess    
- }: ModalPromotionsFormProps) {
+function ModalPromotionsForm({onClose, restaurantId, mode, menuId, defaultValues, onSuccess}: ModalPromotionsFormProps) {
     const [preview, setPreview] = useState<string | null>(null)
-    const [type, setType] = useState("ALL")
-    const [name, setName] = useState("")
-    const [desc, setDesc] = useState("")
+    const [type, setType] = useState(defaultValues?.type ?? "ALL")
+    const [name, setName] = useState(defaultValues?.name ?? "")
+    const [desc, setDesc] = useState(defaultValues?.desc ?? "")
     const [imageFile, setImageFile] = useState<File | null>(null)
-    const [timer, setTimer] = useState("")
-    const [price, setPrice] = useState("")
-    const [discount, setDiscount] = useState("")
+    const [timer, setTimer] = useState(defaultValues?.timer ?? "")
+    const [price, setPrice] = useState(defaultValues?.price?.toString() ?? "")
+    const [discount, setDiscount] = useState(defaultValues?.discount?.toString() ?? "")
+    const [image, setImage] = useState(defaultValues?.image ?? "")
+    
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
+
+    const API_URL = "http://localhost:3000"
+
+    const imageUrl = image ? image.startsWith("http") ? image : `${API_URL}${image}` : ""
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
@@ -47,19 +64,32 @@ function ModalPromotionsForm({
             formData.append("type", type)
             formData.append("restaurant_id", restaurantId)
 
-            if (discount) {
+            if (mode === "update") {
                 formData.append("discount", discount)
-            }
-
-            if (timer) {
                 formData.append("timer", timer)
+            } else {
+                if (discount) {
+                    formData.append("discount", discount)
+                }
+
+                if (timer) {
+                    formData.append("timer", timer)
+                }
             }
 
             if (imageFile) {
                 formData.append("image", imageFile)
             }
 
-            await createMenu(formData)
+            if (mode === "update") {
+                if (!menuId) {
+                    throw new Error("Menu ID is required")
+                }
+
+                await updateMenu(menuId, formData)
+            } else {
+                await createMenu(formData)
+            }
 
             onSuccess?.()
             onClose()
@@ -79,7 +109,9 @@ function ModalPromotionsForm({
                 <div className="flex items-center gap-3 w-[clamp(200px,70vw,800px)]">
                     <FontAwesomeIcon icon={faUtensils} className="bg-yellow-500/20
                     text-sm sm:text-3xl md:text-3xl p-2.5 rounded-xl text-yellow-500"/>
-                    <p className="text-sm  sm:text-lg md:text-xl font-extrabold text-yellow-500">Create Menu</p>
+                    <p className="text-sm sm:text-lg md:text-xl font-extrabold text-yellow-500">
+                        {mode === "update" ? "Update Menu" : "Create Menu"}
+                    </p>
                     <hr className="flex-1 border-t-px border-white " />
                 </div>
                 <form onSubmit={handleSubmit} encType="multipart/form-data" className="flex flex-col gap-2">
@@ -154,8 +186,8 @@ function ModalPromotionsForm({
 
                     <div>
                         <label className="relative flex flex-col items-center justify-center w-full mt-6 p-5 rounded-md border-2 border-dashed border-(--color-brand-secondary)">
-                            {preview ? (
-                                <img src={preview} alt="Preview" className='box-border h-60' />
+                            {preview || image ? (
+                                <img src={preview ?? imageUrl} alt="Preview" className='box-border h-60' />
                             ) : (
                                 <span className='text-(--color-brand-secondary) text-lg md:text-xl h-40 md:h-60 flex justify-center items-center'>Click to add image</span>
                             )}
@@ -196,7 +228,11 @@ function ModalPromotionsForm({
                             <button className="border border-(--color-state-success) text-(--color-state-success)
                             text-sm md:text-lg px-[clamp(9px,2.5vw,18px)] py-[clamp(3px,2.5vw,6px)] rounded-full 
                             bg-(--color-state-success)/20 hover:text-(--color-text-primary) hover:bg-(--color-state-success)
-                            duration-300 cursor-pointer" disabled={loading} type="submit">Create</button>
+                            duration-300 cursor-pointer" disabled={loading} type="submit">
+                                {loading
+                                    ? mode === "update" ? "Updating..." : "Creating..."
+                                    : mode === "update" ? "Update" : "Create"}
+                            </button>
                         </div>
                     </div>
 
