@@ -37,7 +37,7 @@ model Menu {
   price     Float
   discount  Float?
   type      menu_type @default(ALL)
-  timer     DateTime?
+  timer     String?
   image     String
 
   status    Boolean   @default(false)

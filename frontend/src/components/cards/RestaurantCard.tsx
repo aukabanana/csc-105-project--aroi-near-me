@@ -4,30 +4,55 @@ import ModalRestaurantForm from "../../features/admin/ModalRestaurantForm";
 
 import { useState } from "react";
 import ModalConfirm from "../../features/admin/ModalConfirm";
-import UpdateRest from "../ui/UpdateRest";
+import UpdateRest from "../ui/UpdateRest"
+
+import { isAdminUser } from "../../features/auth/auth";
+import { deleteRestaurant,getErrorMessage} from "../../api/aroi";
 
 export type RestCardProps = {
+    id: string;
     image: string;
     restName: string;
     desc: string;
     admin?: boolean;
 }
 
-export default function RestaurantCard ({image,restName,desc,admin}:RestCardProps) {
+export default function RestaurantCard ({id,image,restName,desc,admin}:RestCardProps) {
+
+    const API_URL = "http://localhost:3000"
+
+    const imageUrl = image.startsWith("http") ? image : `${API_URL}${image}`
 
     const [openDel, setOpenDel] = useState(false)
     const [openRest, setOpenRest] = useState(false)
+    const [deleting, setDeleting] = useState(false)
     const navigate = useNavigate()
+
+    const handleDeleteRestaurant = async () => {
+        try {
+            setDeleting(true);
+
+            await deleteRestaurant(id);
+
+            setOpenDel(false);
+            window.location.reload();
+        } catch (err) {
+            console.log(getErrorMessage(err));
+        } finally {
+            setDeleting(false);
+        }
+    };
+
     return (
 
       <div className="aspect-auto relative w-full min-h-50 h-auto bg-(--color-bg-surface) [box-shadow:0_0_1px_0_var(--color-text-primary)] rounded-[10px] flex flex-col cursor-pointer
         hover:[box-shadow:0_6px_24px_-8px_var(--color-brand-primary)] duration-300
         md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl
         md:min-h-62.5 lg:min-h-125"
-        onClick={()=> navigate(`/restaurant/${restName}`)}>
+        onClick={()=> navigate(`/restaurant/${id}`)}>
 
-        <div className="relative rounded-[10px] h-[70%] md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl">
-            <img src={image} alt="" className="rounded-t-[10px] w-full h-full object-cover md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl" />
+        <div className="relative rounded-[10px] h-[70%] max-h-[300px] md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl">
+            <img src={imageUrl} alt={restName} className="rounded-t-[10px] w-full h-full object-cover md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl" />
             <div className="absolute inset-0 pointer-events-none rounded-t-[10px] [box-shadow:inset_0_-52px_24px_-24px_var(--color-bg-surface)]"></div>
         </div>
 
@@ -43,7 +68,7 @@ export default function RestaurantCard ({image,restName,desc,admin}:RestCardProp
                 </div>
             </div>
 
-            {admin &&
+            {admin && isAdminUser() &&
                 <div className="flex flex-row justify-end items-center">
                     <div className="flex flex-row justify-start items-center gap-1 lg:gap-3">
 
@@ -51,12 +76,31 @@ export default function RestaurantCard ({image,restName,desc,admin}:RestCardProp
                         onUpdateRest={(e) => {
                             setOpenRest(true)
                             e.stopPropagation()}}/>
-                        {openRest && <ModalRestaurantForm onClose={() => setOpenRest(false)}/>}
+                        {openRest && (
+                            <ModalRestaurantForm
+                                mode="update"
+                                restaurantId={id}
+                                defaultValues={{
+                                    name: restName,
+                                    banner: imageUrl,
+                                    address: desc,
+                                }}
+                                onClose={() => setOpenRest(false)}
+                                onSuccess={() => {
+                                    window.location.reload()
+                                }}
+                            />
+                        )}
                         
                         <DeleteRest onDeleteRest={(e) => {
                             setOpenDel(true)
                             e.stopPropagation()}}/>
-                        {openDel && <ModalConfirm onClose={()=> setOpenDel(false)}/>}
+                        {openDel && 
+                            <ModalConfirm 
+                                onClose={()=> setOpenDel(false)}
+                                onConfirm={handleDeleteRestaurant}
+                                loading={deleting}    
+                            />}
                     </div>
                 </div>
             }

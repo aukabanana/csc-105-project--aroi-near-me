@@ -2,16 +2,104 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faUtensils } from "@fortawesome/free-solid-svg-icons"
 import { useState } from 'react'
 import SortType from "../../components/ui/SortType"
+import { createMenu,updateMenu,getErrorMessage } from "../../api/aroi"
 
-function ModalPromotionsForm({ onClose }: { onClose: () => void }) {
+type MenuFormValues = {
+    name: string
+    desc: string
+    price: number
+    discount?: number | null
+    type: string
+    timer?: string | null
+    image: string
+}
+
+type ModalPromotionsFormProps = {
+    onClose: () => void
+    restaurantId: string
+    mode?: "create" | "update"
+    menuId?: string
+    defaultValues?: MenuFormValues
+    onSuccess?: () => void
+}
+
+function ModalPromotionsForm({onClose, restaurantId, mode, menuId, defaultValues, onSuccess}: ModalPromotionsFormProps) {
     const [preview, setPreview] = useState<string | null>(null)
-    const [type,setType] = useState('ALL')
+    const [type, setType] = useState(defaultValues?.type ?? "ALL")
+    const [name, setName] = useState(defaultValues?.name ?? "")
+    const [desc, setDesc] = useState(defaultValues?.desc ?? "")
+    const [imageFile, setImageFile] = useState<File | null>(null)
+    const [timer, setTimer] = useState(defaultValues?.timer ?? "")
+    const [price, setPrice] = useState(defaultValues?.price?.toString() ?? "")
+    const [discount, setDiscount] = useState(defaultValues?.discount?.toString() ?? "")
+    const [image, setImage] = useState(defaultValues?.image ?? "")
+    
+    const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
+
+    const API_URL = "http://localhost:3000"
+
+    const imageUrl = image ? image.startsWith("http") ? image : `${API_URL}${image}` : ""
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
+
         if (file) {
             setPreview(URL.createObjectURL(file))
+            setImageFile(file)
         }
     }
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        try {
+            setError("")
+            setLoading(true)
+
+            const formData = new FormData()
+            formData.append("name", name)
+            formData.append("desc", desc)
+            formData.append("price", price)
+            formData.append("type", type)
+            formData.append("restaurant_id", restaurantId)
+
+            if (mode === "update") {
+                formData.append("discount", discount)
+                formData.append("timer", timer)
+            } else {
+                if (discount) {
+                    formData.append("discount", discount)
+                }
+
+                if (timer) {
+                    formData.append("timer", timer)
+                }
+            }
+
+            if (imageFile) {
+                formData.append("image", imageFile)
+            }
+
+            if (mode === "update") {
+                if (!menuId) {
+                    throw new Error("Menu ID is required")
+                }
+
+                await updateMenu(menuId, formData)
+            } else {
+                await createMenu(formData)
+            }
+
+            onSuccess?.()
+            onClose()
+        } catch (err) {
+            setError(getErrorMessage(err))
+        } finally {
+            setLoading(false)
+        }
+    }
+
     return (
 
         <div className="fixed inset-0 z-50 bg-white/20 flex justify-center items-center" onClick={onClose}>
@@ -21,10 +109,12 @@ function ModalPromotionsForm({ onClose }: { onClose: () => void }) {
                 <div className="flex items-center gap-3 w-[clamp(200px,70vw,800px)]">
                     <FontAwesomeIcon icon={faUtensils} className="bg-yellow-500/20
                     text-sm sm:text-3xl md:text-3xl p-2.5 rounded-xl text-yellow-500"/>
-                    <p className="text-sm  sm:text-lg md:text-xl font-extrabold text-yellow-500">Create Menu</p>
+                    <p className="text-sm sm:text-lg md:text-xl font-extrabold text-yellow-500">
+                        {mode === "update" ? "Update Menu" : "Create Menu"}
+                    </p>
                     <hr className="flex-1 border-t-px border-white " />
                 </div>
-                <form className="flex flex-col gap-2">
+                <form onSubmit={handleSubmit} encType="multipart/form-data" className="flex flex-col gap-2">
                     <div className="flex flex-row gap-5">
                         <label htmlFor="restType" className="text-white">Type</label>
                         <SortType 
@@ -36,14 +126,17 @@ function ModalPromotionsForm({ onClose }: { onClose: () => void }) {
 
                     <div className="flex flex-col md:flex-row justify-between gap-2">
                         <div className="flex flex-col gap-[clamp(2px,2.5vw,4px)] w-full md:flex-2">
-                            <label htmlFor="restName" className="text-white">Menu Name</label>
-                            <input type="text" id="restName" className="border border-(--color-brand-secondary) rounded-md
+                            <label htmlFor="menuName" className="text-white">Menu Name</label>
+                            <input type="text" id="menuName"
+                            className="border border-(--color-brand-secondary) rounded-md
                             p-[clamp(10px,2.5vw,20px)] text-sm md:4xl h-10 md:h-12 outline-none focus:outline-none"
-                                required placeholder="Restaurant Name" />
+                            required placeholder="Menu Name"
+                            value={name}
+                            onChange={(e)=> setName(e.target.value)} />
                         </div>
 
                         <div className="flex flex-col gap-[clamp(2px,2.5vw,4px)] w-full md:flex-1">
-                            <label htmlFor="time" className="font-medium text-white">Promotion Time</label>
+                            <label htmlFor="time" className="font-medium text-white">Promotion Time (Optional)</label>
 
                             <div className="flex flex-row items-center justify-between
                             border border-(--color-brand-secondary) rounded-md
@@ -53,9 +146,10 @@ function ModalPromotionsForm({ onClose }: { onClose: () => void }) {
                                     <span className="text-[10px] text-(--color-brand-secondary)">Start</span>
                                     <input
                                         type="time"
-                                        className="outline-none focus:outline-none text-sm
-                                        apper"
                                         id="time"
+                                        className="outline-none focus:outline-none text-sm"
+                                        value={timer}
+                                        onChange={(e)=>setTimer(e.target.value)}
                                     />
                                 </div>
 
@@ -63,65 +157,86 @@ function ModalPromotionsForm({ onClose }: { onClose: () => void }) {
                         </div>
                     </div>
                     <div className="flex flex-col gap-[clamp(2px,2.5vw,4px)] w-full">
-                            <label htmlFor="restName" className="text-white">Price</label>
-                            <input type="number" id="restName" className="border border-(--color-brand-secondary) rounded-md
+                            <label htmlFor="price" className="text-white">Price</label>
+                            <input type="number" id="price" 
+                            className="border border-(--color-brand-secondary) rounded-md
                             p-[clamp(10px,2.5vw,20px)] text-sm md:4xl h-10 md:h-12 outline-none focus:outline-none"
-                                required placeholder="Price (numeric only)" />
+                            required placeholder="Price (number only)"
+                            value={price}
+                            onChange={(e)=>setPrice(e.target.value)} />
                     </div>
                     <div className="flex flex-col gap-[clamp(2px,2.5vw,4px)] w-full">
-                            <label htmlFor="restName" className="text-white">Discount Price</label>
-                            <input type="number" id="restName" className="border border-(--color-brand-secondary) rounded-md
+                            <label htmlFor="discount" className="text-white">Discount Price (Optional)</label>
+                            <input type="number" id="discount"
+                            className="border border-(--color-brand-secondary) rounded-md
                             p-[clamp(10px,2.5vw,20px)] text-sm md:4xl h-10 md:h-12 outline-none focus:outline-none"
-                                required placeholder="Discounted Price (numeric only)" />
+                            placeholder="Discounted Price (number only)"
+                            value={discount}
+                            onChange={(e)=>setDiscount(e.target.value)} />
                     </div>
                     <div className="flex flex-col gap-[clamp(2px,2.5vw,4px)] w-full">
-                            <label htmlFor="restName" className="text-white">Description</label>
-                            <input type="text" id="restName" className="border border-(--color-brand-secondary) rounded-md
+                            <label htmlFor="description" className="text-white">Description</label>
+                            <input type="text" id="description"
+                            className="border border-(--color-brand-secondary) rounded-md
                             p-[clamp(10px,2.5vw,20px)] text-sm md:4xl h-10 md:h-12 outline-none focus:outline-none"
-                                required placeholder="Description" />
+                            required placeholder="Description"
+                            value={desc}
+                            onChange={(e)=> setDesc(e.target.value)} />
                     </div>
-                </form>
 
-                <form>
-                    <label className="relative flex flex-col items-center justify-center w-full mt-6 p-5 rounded-md border-2 border-dashed border-(--color-brand-secondary)">
-                        {preview ? (
-                            <img src={preview} alt="Preview" className='box-border h-60' />
-                        ) : (
-                            <span className='text-(--color-brand-secondary) text-lg md:text-xl h-40 md:h-60 flex justify-center items-center'>Click to add image</span>
+                    <div>
+                        <label className="relative flex flex-col items-center justify-center w-full mt-6 p-5 rounded-md border-2 border-dashed border-(--color-brand-secondary)">
+                            {preview || image ? (
+                                <img src={preview ?? imageUrl} alt="Preview" className='box-border h-60' />
+                            ) : (
+                                <span className='text-(--color-brand-secondary) text-lg md:text-xl h-40 md:h-60 flex justify-center items-center'>Click to add image</span>
+                            )}
+
+                            <div className=''>
+                                <input 
+                                    type="file"
+                                    name="image"
+                                    className='hidden cursor-pointer'
+                                    accept='image/*'
+                                    onChange={handleFileChange}
+                                />
+                            </div>
+                        </label>
+                        {preview && (
+                            <button type="button" className='border border-(--color-brand-primary)
+                            px-4 py-1 rounded-full mt-5 text-(--color-brand-primary)
+                            font-bold cursor-pointer hover:text-(--color-text-primary)
+                            duration-300 bg-(' 
+                            onClick={() => {
+                                setPreview(null)
+                                setImageFile(null)
+                            }}>Remove Image</button>
                         )}
 
-                        <div className=''>
-                            <input type="file"
-                                className='hidden cursor-pointer'
-                                accept='image/*'
-                                onChange={handleFileChange}
-                            />
-                        </div>
-                    </label>
-                    {preview && (
-                        <button className='border border-(--color-brand-primary)
-                        px-4 py-1 rounded-full mt-5 text-(--color-brand-primary)
-                        font-bold cursor-pointer hover:text-(--color-text-primary)
-                        duration-300 bg-(' onClick={() => setPreview(null)}>Remove Image</button>
-                    )}
-                </form>
-                <div className='flex flex-row mt-5 md:mt-7 mb-5 md:mb-7 gap-5 float-end'>
-                    <button className="border border-(--color-brand-primary) text-(--color-brand-primary) 
-                    text-sm md:text-lg px-[clamp(9px,2.5vw,18px)] py-[clamp(3px,2.5vw,6px)] rounded-full 
-                    bg-(--color-brand-primary)/20 hover:text-(--color-text-primary) hover:bg-(--color-brand-primary)
-                    duration-300 cursor-pointer" onClick={(e) => {
-                            e.preventDefault()
-                            onClose()
-                        }}>Cencel</button>
+                        {error && (
+                            <p className="mt-4 text-(--color-brand-primary) font-bold">{error}</p>
+                        )}
 
-                    <button className="border border-(--color-state-success) text-(--color-state-success)
-                    text-sm md:text-lg px-[clamp(9px,2.5vw,18px)] py-[clamp(3px,2.5vw,6px)] rounded-full 
-                    bg-(--color-state-success)/20 hover:text-(--color-text-primary) hover:bg-(--color-state-success)
-                    duration-300 cursor-pointer" onClick={(e) => {
-                            e.preventDefault()
-                            onClose()
-                        }}>Create</button>
-                </div>
+                        <div className='flex flex-row mt-5 md:mt-7 mb-5 md:mb-7 gap-5 float-end'>
+                            <button className="border border-(--color-brand-primary) text-(--color-brand-primary) 
+                            text-sm md:text-lg px-[clamp(9px,2.5vw,18px)] py-[clamp(3px,2.5vw,6px)] rounded-full 
+                            bg-(--color-brand-primary)/20 hover:text-(--color-text-primary) hover:bg-(--color-brand-primary)
+                            duration-300 cursor-pointer" 
+                            onClick={onClose}
+                            type="button">Cencel</button>
+
+                            <button className="border border-(--color-state-success) text-(--color-state-success)
+                            text-sm md:text-lg px-[clamp(9px,2.5vw,18px)] py-[clamp(3px,2.5vw,6px)] rounded-full 
+                            bg-(--color-state-success)/20 hover:text-(--color-text-primary) hover:bg-(--color-state-success)
+                            duration-300 cursor-pointer" disabled={loading} type="submit">
+                                {loading
+                                    ? mode === "update" ? "Updating..." : "Creating..."
+                                    : mode === "update" ? "Update" : "Create"}
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
             </div>
         </div>
     )

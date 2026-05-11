@@ -9,6 +9,8 @@ import ModalConfirm from "../../features/admin/ModalConfirm";
 import ModalPromotionsForm from "../../features/admin/ModalPromotionsForm";
 import ModalAvailable from "../modals/MenuAvailable";
 
+import { isAdminUser } from "../../features/auth/auth"
+
 export type ProCardProps = {
     image: string;
     name: string;
@@ -53,7 +55,7 @@ export default function PromotionCard ({image,name,restName,desc,price,originalP
             {type && <div className="px-2 py-px bg-[rgba(var(--rgb-bg-default)/0.5)] rounded-full float-end">{type}</div>}
         </div>
 
-        <div className="relative rounded-[10px] h-[70%] md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl">
+        <div className="relative rounded-[10px] h-[70%] max-h-[300px] md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl">
             <img src={image} alt="" className="rounded-t-[10px] w-full h-full object-cover md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl" />
             <div className="absolute inset-0 pointer-events-none rounded-t-[10px] [box-shadow:inset_0_-52px_24px_-24px_var(--color-bg-surface)]"></div>
         </div>
@@ -75,16 +77,16 @@ export default function PromotionCard ({image,name,restName,desc,price,originalP
                 <div className="flex flex-row justify-start items-center gap-1 lg:gap-3">
                     {price && <p className="text-[8px] font-bold text-(--color-brand-primary)
                     md:text-[10px] lg:text-[18px] xl:text-[20px] 2xl:text-[22px]">฿{price}</p>}
-                    {originalPrice > 0 && <p className="text-[8px] font-bold text-(--color-brand-scondary) line-through
+                    {(originalPrice ?? 0) > 0 && <p className="text-[8px] font-bold text-(--color-brand-scondary) line-through
                     md:text-[8px] lg:text-[18px] xl:text-[20px] 2xl:text-[22px]">฿{originalPrice}</p>}
                 </div>
                 <div className="px-1 bg-[rgba(var(--rgb-brand-primary)/0.15)] rounded-full font-bold text-[8px] text-(--color-brand-primary)
                 md:text-[10px] lg:text-[18px] xl:text-[20px] 2xl:text-[22px]">
-                    {discount > 0 && <p>-{discount}%</p>}
+                    {(discount ?? 0) > 0 && <p>-{discount}%</p>}
                 </div>
             </div>
 
-            {admin &&
+            {admin && isAdminUser() &&
                 <div className="flex flex-row justify-end items-center">
                     <div className="flex flex-row justify-start items-center gap-1
                     lg:gap-3">

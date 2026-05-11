@@ -1,8 +1,6 @@
-import {Request, Response} from 'express'
-import morgan from 'morgan'
+import { Request, Response } from 'express'
 import { z, ZodError } from 'zod'
 import prisma from '../lib/prisma.js'
-
 
 // ? Schema Section
 const restaurantSchema = z.object({
@@ -24,14 +22,37 @@ const MenuTypeEnum = z.enum([
 const menuSchema = z.object({
     name: z.string().min(1),
     desc: z.string().min(1),
-    price: z.number().positive(),
-    discount: z.number().min(0).optional(),
-    type: MenuTypeEnum.default('ALL'),
-    timer: z.string().datetime().optional(),
+    price: z.coerce.number().positive(),
+    discount: z.coerce.number().min(0).optional(),
+    type: MenuTypeEnum.default("ALL"),
+    timer: z.string().optional(),
     image: z.string().min(1),
-    status: z.boolean().default(false),
+    status: z.coerce.boolean().default(false),
     restaurant_id: z.string().uuid(),
 })
+
+const updateMenuSchema = z.object({
+    name: z.string().min(1).optional(),
+    desc: z.string().min(1).optional(),
+    price: z.coerce.number().positive().optional(),
+
+    discount: z.preprocess(
+        (value) => value === "" || value === "null" ? null : value,
+        z.coerce.number().min(0).nullable().optional()
+    ),
+
+    type: MenuTypeEnum.optional(),
+
+    timer: z.preprocess(
+        (value) => value === "" || value === "null" ? null : value,
+        z.string().nullable().optional()
+    ),
+
+    image: z.string().min(1).optional(),
+    status: z.coerce.boolean().optional(),
+    restaurant_id: z.string().uuid().optional(),
+})
+
 const partialMenu = menuSchema.partial();
 
 const Admin = z.object({
@@ -42,25 +63,81 @@ const Admin = z.object({
 //get all menu
 export const getAllMenu = async (req: Request, res: Response) => {
     try {
-        const data = await prisma.menu.findMany();
+        const data = await prisma.menu.findMany({
+            where: {
+                is_active: true
+            }
+        });
+
         res.status(200).json(data);
     } catch (error) {
         if (error instanceof ZodError) return res.status(400).json(error.issues)
-            res.status(500).json(error)
+        res.status(500).json(error)
+    }
+}
+
+// get promotion menu
+export const getPromotionMenus = async (req: Request, res: Response) => {
+    try {
+        const data = await prisma.menu.findMany({
+            where: {
+                is_active: true,
+                status: true,
+                OR: [
+                    {
+                        timer: {
+                            not: null
+                        }
+                    },
+                    {
+                        discount: {
+                            not: null
+                        }
+                    },
+                ]
+            },
+            include: {
+                restaurant: true
+            }
+        })
+
+        res.status(200).json(data)
+    } catch (error) {
+        res.status(500).json(error)
     }
 }
 
 //create new menu
 export const createMenu = async (req: Request, res: Response) => {
     try {
-        const {name, desc, price, discount, type, timer, image, restaurant_id} = menuSchema.parse(req.body)
-        const newMenu = await prisma.menu.create({
-            data: {name, desc, price, discount, type : type as any, timer, image, restaurant_id}
+        const image = req.file ? `/uploads/img/${req.file.filename}` : ""
+
+        const data = menuSchema.parse({
+            name: req.body.name,
+            desc: req.body.desc,
+            price: req.body.price,
+            discount: req.body.discount || undefined,
+            type: req.body.type,
+            timer: req.body.timer || undefined,
+            image,
+            status: req.body.status ?? false,
+            restaurant_id: req.body.restaurant_id,
         })
-        res.status(201).json(newMenu);
+
+        const newMenu = await prisma.menu.create({
+            data: {
+                ...data,
+                type: data.type as any,
+            }
+        })
+
+        res.status(201).json(newMenu)
     } catch (error) {
-        if (error instanceof ZodError) return res.status(400).json(error.issues)
-            res.status(500).json(error)
+        if (error instanceof ZodError) {
+            return res.status(400).json(error.issues)
+        }
+
+        res.status(500).json(error)
     }
 }
 
@@ -69,35 +146,46 @@ export const getMenuByName = async (req: Request, res: Response) => {
     try {
         const name = req.params.name as string
         const data = await prisma.menu.findMany({
-            where: {name: name}})
+            where: { name: name }
+        })
         res.status(200).json(data)
-    } catch(error) {
+    } catch (error) {
         if (error instanceof ZodError) return res.status(400).json(error.issues)
         res.status(500).json(error)
     }
 }
 
-
-
-
 //update menu (using patch)
 export const updateMenu = async (req: Request, res: Response) => {
     try {
         const id = req.params.id as string
-        const data = partialMenu.parse(req.body)
 
-        const updateMenu = await prisma.menu.update({
-            where:{id},
-            data: data
+        const image = req.file
+            ? `/uploads/img/${req.file.filename}`
+            : undefined
+
+        const data = updateMenuSchema.parse({
+            ...req.body,
+            ...(image ? { image } : {})
         })
-        res.status(200).json(updateMenu)
+
+        const updatedMenu = await prisma.menu.update({
+            where: { id },
+            data: {
+                ...data,
+                type: data.type as any,
+            }
+        })
+
+        res.status(200).json(updatedMenu)
     } catch (error) {
-        if (error instanceof ZodError)
+        if (error instanceof ZodError) {
             return res.status(400).json(error.issues)
+        }
+
         res.status(500).json(error)
     }
 }
-
 
 //delete menu --> Change staus is_active
 export const deleteMenu = async (req: Request, res: Response) => {
@@ -127,7 +215,7 @@ export const getAllRestaurant = async (req: Request, res: Response) => {
     try {
         const data = await prisma.restaurant.findMany()
         res.status(200).json(data)
-    } catch(error) {
+    } catch (error) {
         if (error instanceof ZodError) return res.status(400).json(error.issues)
         res.status(500).json(error)
     }
@@ -135,10 +223,18 @@ export const getAllRestaurant = async (req: Request, res: Response) => {
 
 export const createRestaurant = async (req: Request, res: Response) => {
     try {
-        const {name, banner, address} = restaurantSchema.parse(req.body)
-        const newRest = await prisma.restaurant.create({
-            data: {name, banner, address}
+        const banner = req.file ? `/uploads/img/${req.file.filename}` : ""
+
+        const data = restaurantSchema.parse({
+            name: req.body.name,
+            address: req.body.address,
+            banner
         })
+
+        const newRest = await prisma.restaurant.create({
+            data
+        })
+
         res.status(201).json(newRest)
     } catch (error) {
         if (error instanceof ZodError) return res.status(400).json(error.issues)
@@ -150,16 +246,29 @@ export const createRestaurant = async (req: Request, res: Response) => {
 export const updateRestaurant = async (req: Request, res: Response) => {
     try {
         const id = req.params.id as string
+
+        const banner = req.file
+            ? `/uploads/img/${req.file.filename}`
+            : undefined
+
+        const body = partialRestaurant.parse({
+            ...req.body,
+            ...(banner ? { banner } : {})
+        })
+
         const data = await prisma.restaurant.update({
             where: {
-                id: id
+                id
             },
-            data: req.body
+            data: body
         })
+
         res.status(200).json(data)
     } catch (error) {
-        if (error instanceof ZodError)
+        if (error instanceof ZodError) {
             return res.status(400).json(error.issues)
+        }
+
         res.status(500).json(error)
     }
 }

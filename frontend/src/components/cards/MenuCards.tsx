@@ -9,7 +9,12 @@ import ModalConfirm from "../../features/admin/ModalConfirm";
 import ModalPromotionsForm from "../../features/admin/ModalPromotionsForm";
 import ModalAvailable from "../modals/MenuAvailable";
 
+import { isAdminUser } from "../../features/auth/auth"
+import { deleteMenu, getErrorMessage } from "../../api/aroi";
+
 export type MenuCardProps = {
+    id: string;
+    restaurantId: string;
     image: string;
     name: string;
     restName: string;
@@ -23,11 +28,39 @@ export type MenuCardProps = {
     admin?: boolean;
 }
 
-export default function MenuCard ({image,name,restName,desc,price,originalPrice,discount,type,timer,status,admin}:MenuCardProps) {
+export default function MenuCard ({id,restaurantId,image,name,restName,desc,price,originalPrice,discount,type,timer,status,admin}:MenuCardProps) {
     
     const [openDel, setOpenDel] = useState(false)
     const [openUp, setOpenUp] = useState(false)
     const [openMoStatus, setOpenMoStatus] = useState(false)
+    const [deleting, setDeleting] = useState(false)
+
+    const hasDiscount = (discount ?? 0) > 0;
+
+    const original = price;
+
+    const finalPrice = hasDiscount && original
+    ? Math.round(original * (1 - discount! / 100))
+    : price;
+
+    const API_URL = "http://localhost:3000"
+
+    const imageUrl = image.startsWith("http") ? image : `${API_URL}${image}`
+
+    const handleDeleteMenu = async () => {
+        try {
+            setDeleting(true)
+
+            await deleteMenu(id)
+
+            setOpenDel(false)
+            window.location.reload()
+        } catch (err) {
+            console.log(getErrorMessage(err))
+        } finally {
+            setDeleting(false)
+        }
+    }
 
     return (
     
@@ -53,8 +86,8 @@ export default function MenuCard ({image,name,restName,desc,price,originalPrice,
             {type && <div className="px-2 py-px bg-[rgba(var(--rgb-bg-default)/0.5)] rounded-full float-end">{type}</div>}
         </div>
 
-        <div className="relative rounded-[10px] h-[70%] md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl">
-            <img src={image} alt="" className="rounded-t-[10px] w-full h-full object-cover md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl" />
+        <div className="relative rounded-[10px] h-[70%] max-h-[300px] md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl">
+            <img src={imageUrl} alt={restName} className="rounded-t-[10px] w-full h-full object-cover md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl" />
             <div className="absolute inset-0 pointer-events-none rounded-t-[10px] [box-shadow:inset_0_-52px_24px_-24px_var(--color-bg-surface)]"></div>
         </div>
 
@@ -73,28 +106,52 @@ export default function MenuCard ({image,name,restName,desc,price,originalPrice,
 
             <div className="flex flex-row justify-between items-center">
                 <div className="flex flex-row justify-start items-center gap-1 lg:gap-3">
-                    {price && <p className="text-[8px] font-bold text-(--color-brand-primary)
-                    md:text-[10px] lg:text-[18px] xl:text-[20px] 2xl:text-[22px]">฿{price}</p>}
-                    {originalPrice > 0 && <p className="text-[8px] font-bold text-(--color-brand-scondary) line-through
-                    md:text-[8px] lg:text-[18px] xl:text-[20px] 2xl:text-[22px]">฿{originalPrice}</p>}
+                    {finalPrice && (<p className="text-[8px] font-bold text-(--color-brand-primary)
+                    md:text-[10px] lg:text-[18px] xl:text-[20px] 2xl:text-[22px]">฿{finalPrice}</p>)}
+
+                    {(hasDiscount && original) && <p className="text-[8px] font-bold text-(--color-brand-scondary) line-through
+                    md:text-[8px] lg:text-[18px] xl:text-[20px] 2xl:text-[22px]">฿{original}</p>}
                 </div>
                 <div className="px-1 bg-[rgba(var(--rgb-brand-primary)/0.15)] rounded-full font-bold text-[8px] text-(--color-brand-primary)
                 md:text-[10px] lg:text-[18px] xl:text-[20px] 2xl:text-[22px]">
-                    {discount > 0 && <p>-{discount}%</p>}
+                    {hasDiscount && <p>-{discount}%</p>}
                 </div>
             </div>
 
-            {admin &&
+            {admin && isAdminUser() &&
                 <div className="flex flex-row justify-end items-center">
-                    <div className="flex flex-row justify-start items-center gap-1 lg:gap-3">
+                    <div className="flex flex-row justify-start items-center gap-1 lg:gap-3" onClick={(e) => e.stopPropagation()}>
                         <UpdateBtn onUpdate={()=> {
                             setOpenUp(true) 
                             console.log('Update Clicked')}
                         }/>
-                        {openUp && <ModalPromotionsForm onClose={()=> setOpenUp(false)}/>}
+                        {openUp && (
+                            <ModalPromotionsForm
+                                mode="update"
+                                menuId={id}
+                                restaurantId={restaurantId}
+                                defaultValues={{
+                                    name,
+                                    desc,
+                                    price: price ?? 0,
+                                    discount: discount ?? null,
+                                    type,
+                                    timer: timer ?? null,
+                                    image,
+                                }}
+                                onClose={() => setOpenUp(false)}
+                                onSuccess={() => window.location.reload()}
+                            />
+                        )}
 
                         <DeleteBtn onDelete={() => {setOpenDel(true)}}/>
-                        {openDel && <ModalConfirm onClose={()=> setOpenDel(false)}/>}
+                        {openDel && (
+                            <ModalConfirm
+                                onClose={() => setOpenDel(false)}
+                                onConfirm={handleDeleteMenu}
+                                loading={deleting}
+                            />
+                        )}
                     </div>
                 </div>
             }
@@ -104,10 +161,12 @@ export default function MenuCard ({image,name,restName,desc,price,originalPrice,
       {openMoStatus && (
             <ModalAvailable
             onClose={() => setOpenMoStatus(false)}
+            menuId={id}
             nameMenu={name}
             descMenu={desc}
             imageMenu={image}
             statusMenu={status}
+            onSuccess={()=> window.location.reload()}
         />)}
     </>
   );
