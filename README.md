@@ -21,12 +21,12 @@ The project supports restaurant management, menu management, image upload, promo
 - Node.js
 - Express.js
 - TypeScript
-- Prisma ORM
 - Zod validation
-- Multer for image upload
-- Cookie-based authentication
 - CORS
 - Morgan
+- Prisma ORM
+- Multer for image upload
+- Cookie-based authentication
 - Cookie Parser
 
   
@@ -48,14 +48,14 @@ cd <project-folder>
 
 ---
 
-## Backend Setup:
+### 2. Backend Setup:
 
 ```bash
 cd backend
 npm install
 ```
 
-Create environment file
+Create an environment file
 
 ```bash
 touch .env
@@ -70,7 +70,12 @@ DATABASE_URL="file:./dev.db"
 JWT_SECRET=your_secret_key_here
 ```
 
-Then continue with
+Create the upload folder (if upload/img doesn't exist):
+```
+mkdir -p uploads/img
+```
+
+Generate Prisma client:
 
 ```bash
 npx prisma generate
@@ -86,7 +91,7 @@ http://localhost:3000
 
 ---
 
-## Frontend Setup:
+### 3. Frontend Setup:
 
 ```bash
 cd frontend
@@ -103,3 +108,9 @@ http://localhost:5173
 ```
 
 ---
+
+## Notes:
+- Do not commit `node_modules`
+- Do not commit `.env`
+- Commit uploaded user images is available
+- Uploaded images should be stored as file paths, not BLOBs
