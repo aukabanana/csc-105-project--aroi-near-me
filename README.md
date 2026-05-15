@@ -48,20 +48,20 @@ cd <project-folder>
 
 ---
 
-### 2. Backend Setup:
+### 2. Backend Setup
 
 ```bash
 cd backend
 npm install
 ```
 
-Create an environment file
+Create an environment file:
 
 ```bash
 touch .env
 ```
 
-Example `.env` file
+Example `.env` file:
 
 ```env
 PORT=3000
@@ -91,7 +91,7 @@ http://localhost:3000
 
 ---
 
-### 3. Frontend Setup:
+### 3. Frontend Setup
 
 ```bash
 cd frontend
@@ -106,6 +106,24 @@ The frontend should run at:
 ```txt
 http://localhost:5173
 ```
+
+---
+
+### 4. Database view with Prisma Studio
+
+Launch Prisma Studio :
+
+```bash
+cd backend
+npx prisma studio
+```
+
+This will open a web interface at.
+```bash
+http://localhost:51212
+```
+You'll see your Menu, Restaurant and Admin table listed on the left.
+
 
 ---
 
