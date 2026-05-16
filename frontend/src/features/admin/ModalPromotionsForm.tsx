@@ -166,7 +166,7 @@ function ModalPromotionsForm({onClose, restaurantId, mode, menuId, defaultValues
                             onChange={(e)=>setPrice(e.target.value)} />
                     </div>
                     <div className="flex flex-col gap-[clamp(2px,2.5vw,4px)] w-full">
-                            <label htmlFor="discount" className="text-white">Discount Price (Optional)</label>
+                            <label htmlFor="discount" className="text-white">Discount Percent (Optional)</label>
                             <input type="number" id="discount"
                             className="border border-(--color-brand-secondary) rounded-md
                             p-[clamp(10px,2.5vw,20px)] text-sm md:4xl h-10 md:h-12 outline-none focus:outline-none"

@@ -1,5 +1,6 @@
 import axios, { type AxiosError } from "axios";
 import type { Restaurant, Menu, AdminLoginFormData, AdminLoginResponse, AdminLogoutResponse } from "../types/aroi";
+// import { string } from "zod";
 
 const api = axios.create({
     baseURL: "http://localhost:3000/",
@@ -63,23 +64,38 @@ export async function deleteRestaurant(
     }
 }
 
-export async function getMenus(): Promise<Menu[]> {
+export async function getMenus(sort: string): Promise<Menu[]> {
     try {
-        const response = await api.get<Menu[]>("/menus");
+        const response = await api.get<Menu[]>(`/menus?sort=${sort ?? ''}`);
         return response.data;
     } catch (err) {
         throw new Error(getErrorMessage(err));
     }
 }
 
-export async function getPromotionMenus(): Promise<Menu[]> {
+export async function getPromotionMenus(sort: string): Promise<Menu[]> {
     try {
-        const response = await api.get<Menu[]>("/promotion-menus")
+        // const queryParam = sort === 'default' ? '' : sort;
+        const response = await api.get<Menu[]>(`/promotion-menus?sort=${sort ?? ''}`)
         return response.data
     } catch (err) {
         throw new Error(getErrorMessage(err))
     }
 }
+
+//get filtered menus
+export async function getFilterMenus(type: string[]): Promise<Menu[]> {
+    try {
+        const query = type.length > 0 ? type.join(',') : 'ALL'
+        const response = await api.get<Menu[]>(`/filter-menu?type=${query}`)
+        return response.data
+
+    } catch (err) {
+        throw new Error(getErrorMessage(err))
+    }
+}
+
+
 
 export async function createMenu(data: FormData): Promise<Menu> {
     try {

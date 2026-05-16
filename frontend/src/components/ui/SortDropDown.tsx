@@ -1,7 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 
 type Props = {
-  options: string[];
+  options: {
+    label: string
+    value: string
+  }[];
   value: string;
   onChange: (val: string) => void;
 };
@@ -24,6 +27,8 @@ export default function SortDropDown({
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
+  const selectedLabel = options.find(opt => opt.value === value)?.label || value
+
   return (
     <div ref={ref} className="relative shrink-0">
 
@@ -41,7 +46,7 @@ export default function SortDropDown({
         hover:border-orange-400
         "
       >
-        <span className='whitespace-nowrap overflow-hidden text-ellipsis'>{value}</span>
+        <span className='whitespace-nowrap overflow-hidden text-ellipsis'>{selectedLabel}</span>
 
         <span
           className={`text-xs transition-transform duration-200 ${
@@ -69,21 +74,21 @@ export default function SortDropDown({
       >
         {options.map((item) => (
           <div
-            key={item}
+            key={item.value}
             onClick={() => {
-              onChange(item);
+              onChange(item.value);
               setOpen(false);
             }}
             className={`px-3 py-2 md:px-4
               text-xs md:text-sm
               cursor-pointer transition
               ${
-                value === item
+                value === item.value
                   ? "bg-gray-500/30 text-white"
                   : "text-gray-300 hover:bg-gray-500/20"
               }`}
           >
-            {item}
+            {item.label}
           </div>
         ))}
       </div>

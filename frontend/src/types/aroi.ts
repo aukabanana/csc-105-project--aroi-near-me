@@ -61,3 +61,4 @@ export type AdminLoginResponse = {
 export interface AdminLogoutResponse {
     message: string;
 }
+

@@ -25,7 +25,7 @@ function NavBar() {
         <div id="NavTab" className="flex px-[clamp(3px,2.5vw,14px)] py-3 border-b bg-transparent">
             <nav className="flex flex-row items-center justify-between w-full mb-2 md:mb-5">
 
-                <h2 className="font-extrabold text-xl md:text-3xl">{isAdminUser() ? "Admin Dashboard" : "User Dashboard"}</h2>
+                <h2 className="font-extrabold text-xl md:text-3xl">{isAdminUser() ? "Admin Dashboard" : "Guest Dashboard"}</h2>
                 
                 <div className='flex flex-row items-center gap-3 md:gap-6'>
                     
