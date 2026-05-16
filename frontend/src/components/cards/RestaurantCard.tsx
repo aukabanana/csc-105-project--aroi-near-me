@@ -51,7 +51,7 @@ export default function RestaurantCard ({id,image,restName,desc,admin}:RestCardP
         md:min-h-62.5 lg:min-h-125"
         onClick={()=> navigate(`/restaurant/${id}`)}>
 
-        <div className="relative rounded-[10px] h-[70%] max-h-[300px] md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl">
+        <div className="relative rounded-[10px] h-[70%] max-h-60 md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl">
             <img src={imageUrl} alt={restName} className="rounded-t-[10px] w-full h-full object-cover md:rounded-2xl lg:rounded-[20px] xl:rounded-3xl" />
             <div className="absolute inset-0 pointer-events-none rounded-t-[10px] [box-shadow:inset_0_-52px_24px_-24px_var(--color-bg-surface)]"></div>
         </div>

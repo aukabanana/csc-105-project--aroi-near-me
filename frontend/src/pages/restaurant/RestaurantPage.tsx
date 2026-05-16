@@ -18,6 +18,7 @@ function RestaurantPage() {
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null)
     const [menus, setMenus] = useState<Menu[]>([])
     const [errorMessage, setErrorMessage] = useState('')
+    const [sort, setSort] = useState('default')
 
     const { id } = useParams()
 
@@ -31,7 +32,7 @@ function RestaurantPage() {
             try {
                 const [restaurantData, menuData] = await Promise.all([
                     getRestaurants(),
-                    getMenus(),
+                    getMenus(sort === 'default' ? '' : sort),
                 ])
                 const currentRestaurant = restaurantData.find((item) => item.id === id) ?? null
 
@@ -49,7 +50,7 @@ function RestaurantPage() {
         }
 
         fetchRestaurantPageData()
-    }, [id])
+    }, [id, sort])
 
     if (errorMessage || !restaurant) {
         return (
@@ -106,7 +107,7 @@ function RestaurantPage() {
                                     <img
                                     src={bannerUrl}
                                     alt={restaurant.name}
-                                    className='max-w-full md:w-100 lg:w-150 h-auto object-contain rounded-2xl'
+                                    className='max-w-full md:w-100 lg:w-150 max-h-100 object-contain rounded-2xl'
                                     />
                                 )
                             })()}
@@ -114,7 +115,7 @@ function RestaurantPage() {
                     </div>
                 </div>
             </div>
-            <MenuHeader />
+            <MenuHeader sort={sort} setSort={setSort}/>
             <div className='grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-6 lg:grid-cols-4 lg:gap-8'>
                 {menus.length === 0 && (
                     <p className='col-span-full text-sm text-(--color-brand-secondary)'>

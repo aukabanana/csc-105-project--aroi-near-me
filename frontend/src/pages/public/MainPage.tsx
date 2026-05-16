@@ -4,6 +4,7 @@ import Logo from '../../components/layouts/Logo'
 
 import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
 import PillSort from '../../components/ui/PillSort'
@@ -13,17 +14,82 @@ import RestaurantHeader from '../../components/sections/Restaurant'
 import RestaurantCard from '../../components/cards/RestaurantCard';
 
 import MenuCard from '../../components/cards/MenuCards'
-import { getRestaurants, getPromotionMenus } from '../../api/aroi'
+import { getRestaurants, getPromotionMenus, getFilterMenus } from '../../api/aroi'
 import type { Restaurant, Menu } from '../../types/aroi'
+// import { is } from 'zod/v4/locales'
 
 //Mock data section
 
 export default function MainPage() {
+  const [menuAll, setMenuALl] = useState<Menu[]>([])
   const [restaurants, setRestaurants] = useState<Restaurant[]>([])
   const [restaurantError, setRestaurantError] = useState('')
   const [promotionMenus, setPromotionMenus] = useState<Menu[]>([])
   const [promotionError, setPromotionError] = useState('')
+  const [sort, setSort] = useState('default')
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([])
+  const [filterSeleted, setFilterSelected] = useState<Menu[]>([])
+  const [filterSeletedError, setFilterSelectedError] = useState('')
+  const [search, setSearch] = useState('')
+  const [activeSubmit, setActiveSubmit] = useState('')
+  const [searchResult, setSearchResult] = useState<{ menus: Menu[], restaurants: Restaurant[] }>({ menus: [], restaurants: [] })
 
+  const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      setActiveSubmit(search)
+
+      if (search.trim() === '') {
+        setSearchResult({ menus: [], restaurants: [] })
+        return
+      }
+
+      const query = search.toLowerCase()
+
+      const allmenu = [...menuAll]
+
+      const filterMenu = allmenu.filter(menu => {
+        return (
+          menu.name?.toLowerCase().includes(query) ||
+          menu.desc?.toLowerCase().includes(query) ||
+          menu.type?.toLowerCase().includes(query)
+        )
+      })
+
+      const filterRestaurant = restaurants.filter(rest => {
+        return (
+          rest.name?.toLowerCase().includes(query) ||
+          rest.address?.toLowerCase().includes(query)
+        )
+      })
+
+      setSearchResult({
+        menus: filterMenu,
+        restaurants: filterRestaurant
+      })
+    }
+  }
+
+  //fetch following pilsort
+  useEffect(() => {
+    async function fetchByPillButton() {
+      try {
+
+        const selected = await getFilterMenus(selectedTypes)
+        if (selectedTypes.length === 0) {
+          setMenuALl(selected)
+        }
+        setFilterSelected(selected)
+
+      } catch (err) {
+        setFilterSelectedError(
+          err instanceof Error ? err.message : 'Cannot fetch menus by pill sort button'
+        )
+      }
+    }
+    fetchByPillButton()
+  }, [selectedTypes])
+
+  //fetch Restaurant
   useEffect(() => {
     async function fetchRestaurants() {
       try {
@@ -39,10 +105,12 @@ export default function MainPage() {
     fetchRestaurants()
   }, [])
 
+  //fetch Promotion
   useEffect(() => {
     async function fetchPromotionMenus() {
         try {
-            const data = await getPromotionMenus()
+            const sortData = sort === 'default' ? '' : sort
+            const data = await getPromotionMenus(sortData)
             setPromotionMenus(data)
         } catch (err) {
             setPromotionError(
@@ -52,7 +120,7 @@ export default function MainPage() {
     }
 
     fetchPromotionMenus()
-  }, [])
+  }, [sort])
 
   //LocalStorage
   // localStorage.setItem()
@@ -84,7 +152,10 @@ export default function MainPage() {
                     outline-none text-md md:text-xl">
                         <FontAwesomeIcon icon={faMagnifyingGlass} className='text-(--color-brand-secondary)'/>
                         <input
-                            placeholder="Search the menu"
+                            placeholder="Search the menu or restaurant..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            onKeyDown={handleSearchSubmit}
                             className="w-full
                             outline-none focus:outline-none
                             focus:border-transparent
@@ -93,12 +164,129 @@ export default function MainPage() {
                             cursor-type"
                         />
                     </div>
-                    <div className='w-full overflow-x-auto whitespace-nowrap no-scrollbar py-3'><PillSort /></div>
+                    <div className='w-full overflow-x-auto whitespace-nowrap no-scrollbar py-3'>
+                    <PillSort
+                      selectedTypes={selectedTypes}
+                      setSelectedTypes={setSelectedTypes}
+                    />
+                    </div>
                 </div>
             </section>
+            
+            {/* search results */}
+            {activeSubmit.trim() !== '' && (
+              <section className="w-full mt-6 mb-10 px-4 md:px-8 border-b border-zinc-800 pb-10">
+                <div className='flex justify-between'>
+                  <h2 className="text-xl md:text-2xl font-bold mb-6 text-(--color-brand-secondary)">
+                    Results: "{activeSubmit}"
+                  </h2>
+                  <FontAwesomeIcon icon={faCircleXmark} className="
+                    text-sm sm:text-3xl md:text-3xl p-2.5 rounded-xl text-(--color-brand-primary) cursor-pointer" 
+                    onClick={() => setActiveSubmit('')}
+                  />
+                </div>
+
+                {searchResult.menus.length === 0 && searchResult.restaurants.length === 0 ? (
+                  <p className="text-red-400 text-sm">Menu or Restaurant was not found</p>
+                ) : (
+                  <div className="flex flex-col gap-8">
+                    
+                    {searchResult.menus.length > 0 && (
+                      <div>
+                        <h3 className="text-lg mb-4 text-zinc-300 font-semibold">Menu ({searchResult.menus.length})</h3>
+                        <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-3 lg:grid-cols-4 lg:gap-8">
+                          {searchResult.menus.map((item) => (
+                            <MenuCard
+                              key={`search-menu-${item.id}`}
+                              id={item.id}
+                              restaurantId={item.restaurant_id}
+                              image={item.image}
+                              name={item.name}
+                              restName=""
+                              desc={item.desc}
+                              price={item.price}
+                              originalPrice={0}
+                              discount={item.discount ?? 0}
+                              type={item.type}
+                              timer={item.timer ?? undefined}
+                              status={item.status}
+                              admin
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {searchResult.restaurants.length > 0 && (
+                      <div>
+                        <h3 className="text-lg mb-4 text-zinc-300 font-semibold">Restaurant ({searchResult.restaurants.length})</h3>
+                        <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-3 lg:grid-cols-4 lg:gap-8">
+                          {searchResult.restaurants.map((rest) => (
+                            <RestaurantCard
+                              key={`search-rest-${rest.id}`}
+                              id={rest.id}
+                              image={rest.banner}
+                              restName={rest.name}
+                              desc={rest.address}
+                              admin
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                  </div>
+                )}
+              </section>
+            )}
+
+            {/* pill sort results */}
+            {selectedTypes.length > 0 &&
+              <p className='text-zinc-600 mb-10 mx-10 text-xl md:text-2xl'>Filtering : {selectedTypes.join(' , ')} </p>
+            }
+
+            {selectedTypes.length > 0 && (
+              <section className="w-full">
+                
+                {/* Error message */}
+                {filterSeletedError && (
+                  <p className="text-red-400 text-sm">
+                    {filterSeletedError}
+                  </p>
+                )}
+
+                {!filterSeletedError && (
+                  <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-3 lg:grid-cols-4 lg:gap-8 mx-8">
+
+                    {filterSeleted.map((item) => (
+                      <MenuCard
+                        key={item.id}
+                        id={item.id}
+                        restaurantId={item.restaurant_id}
+                        image={item.image}
+                        name={item.name}
+                        restName=""
+                        desc={item.desc}
+                        price={item.price}
+                        originalPrice={0}
+                        discount={item.discount ?? 0}
+                        type={item.type}
+                        timer={item.timer ?? undefined}
+                        status={item.status}
+                        admin
+                      />
+                    ))}
+
+                  </div>
+                )}
+                
+              </section>
+            )}
 
             <section className="mt-10 px-4 md:px-8">
-                <div><PromotionHeader /></div>
+                <div> 
+                  <PromotionHeader sort={sort} setSort={setSort}/>
+                </div>
 
                 <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-3 lg:grid-cols-4 lg:gap-8">
 

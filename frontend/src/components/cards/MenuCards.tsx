@@ -4,7 +4,7 @@ import { faClock } from "@fortawesome/free-solid-svg-icons";
 import UpdateBtn from '../ui/UpdateBtn'
 import DeleteBtn from "../ui/DeleteBtn";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ModalConfirm from "../../features/admin/ModalConfirm";
 import ModalPromotionsForm from "../../features/admin/ModalPromotionsForm";
 import ModalAvailable from "../modals/MenuAvailable";
@@ -47,6 +47,39 @@ export default function MenuCard ({id,restaurantId,image,name,restName,desc,pric
 
     const imageUrl = image.startsWith("http") ? image : `${API_URL}${image}`
 
+    const [timeLeft, setTimeLeft] = useState('')
+    useEffect(() => {
+        if (!timer || !timer.includes(':')) return;
+
+        const updateTime = () => {
+            const [h, m] = timer.split(':').map(Number)
+
+            const now = new Date() //current time
+            const target = new Date()
+
+            target.setHours(h,m,0,0)
+
+            if (target.getTime() <= now.getTime()) {
+                target.setDate(target.getDate() + 1)
+            }
+
+            const diff = target.getTime() - now.getTime()
+
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor(
+                (diff % (1000 * 60 * 60)) / (1000 * 60)
+            );
+
+            const display = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+
+            setTimeLeft(display)
+
+        }
+        updateTime();
+        const interval = setInterval(updateTime, 1000);
+        return () => clearInterval(interval);
+    }, [timer])
+
     const handleDeleteMenu = async () => {
         try {
             setDeleting(true)
@@ -80,7 +113,7 @@ export default function MenuCard ({id,restaurantId,image,name,restName,desc,pric
             <div>
                 {timer && <div className="flex flex-row justify-center items-center gap-1 px-1 py-px bg-(--color-brand-primary) rounded-full">
                     <FontAwesomeIcon icon={faClock}/>    
-                    {timer}
+                    {timeLeft}
                 </div>}
             </div>
             {type && <div className="px-2 py-px bg-[rgba(var(--rgb-bg-default)/0.5)] rounded-full float-end">{type}</div>}

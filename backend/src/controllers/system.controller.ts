@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
 import { z, ZodError } from 'zod'
 import prisma from '../lib/prisma.js'
+import { UUID } from 'node:crypto';
+import { menu_type } from '../generated/prisma/enums.js'
 
 // ? Schema Section
 const restaurantSchema = z.object({
@@ -63,10 +65,17 @@ const Admin = z.object({
 //get all menu
 export const getAllMenu = async (req: Request, res: Response) => {
     try {
+        const { sort } = req.query
         const data = await prisma.menu.findMany({
             where: {
                 is_active: true
-            }
+            },
+            orderBy:
+                sort === 'asc'
+                ? {price: 'asc'}
+                : sort === 'desc'
+                ? {price: 'desc'}
+                : undefined,
         });
 
         res.status(200).json(data);
@@ -79,6 +88,7 @@ export const getAllMenu = async (req: Request, res: Response) => {
 // get promotion menu
 export const getPromotionMenus = async (req: Request, res: Response) => {
     try {
+        const { sort } = req.query
         const data = await prisma.menu.findMany({
             where: {
                 is_active: true,
@@ -96,6 +106,14 @@ export const getPromotionMenus = async (req: Request, res: Response) => {
                     },
                 ]
             },
+            
+            orderBy:
+                sort === 'asc'
+                ? {price: 'asc'}
+                : sort === 'desc'
+                ? {price: 'desc'}
+                : undefined,
+
             include: {
                 restaurant: true
             }
@@ -103,6 +121,38 @@ export const getPromotionMenus = async (req: Request, res: Response) => {
 
         res.status(200).json(data)
     } catch (error) {
+        res.status(500).json(error)
+    }
+}
+
+//get Filtered Menus
+export const getFilterMenus = async (req: Request, res:Response) => {
+    try {
+        const type = req.query.type as string
+
+        if (!type || type === 'ALL' || type.length === 0) {
+            const all = await prisma.menu.findMany()
+            return res.status(200).json(all)
+        }
+
+        const typeAll = type.split(',').map((item) => item.toUpperCase()) as menu_type[]
+
+        const filtered = await prisma.menu.findMany({
+            where: {
+                type: {
+                    in: typeAll
+                }
+            }
+        })
+        
+        res.status(200).json(filtered)
+        
+
+    } catch (error) {
+        if (error instanceof ZodError) {
+            return res.status(400).json(error.issues)
+        }
+
         res.status(500).json(error)
     }
 }

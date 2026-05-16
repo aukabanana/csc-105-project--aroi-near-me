@@ -1,16 +1,33 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTag } from "@fortawesome/free-solid-svg-icons";
 import SortDropDown from "../ui/SortDropDown";
+// import { late } from "zod/v3";
 
-export default function MenuHeader() {
-  const [sort, setSort] = useState("Default");
+type Props = {
+  sort: string,
+  setSort: React.Dispatch<React.SetStateAction<string>>
+}
 
+export default function MenuHeader({
+  sort,
+  setSort
+}: Props) {
+  
   const options = [
-    "Default",
-    "Price low to high",
-    "Price high to low",
-  ];
+    {
+      label: 'Default',
+      value: 'default'
+    },
+    {
+      label: 'Price low to high',
+      value: 'asc'
+    }, 
+    {
+      label: 'Price high to low',
+      value: 'desc'
+    }
+  ]
 
   return (
     <div className="flex items-center gap-2 md:gap-4 mb-4 md:mb-6">
@@ -39,9 +56,9 @@ export default function MenuHeader() {
 
       {/* Right */}
       <SortDropDown
-              options={options}
-              value={sort}
-              onChange={setSort}
+        options={options}
+        value={sort}
+        onChange={setSort}
       />
     </div>
   );
