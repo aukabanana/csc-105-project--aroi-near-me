@@ -70,11 +70,6 @@ DATABASE_URL="file:./dev.db"
 JWT_SECRET=your_secret_key_here
 ```
 
-Create the upload folder (if upload/img doesn't exist):
-```
-mkdir -p uploads/img
-```
-
 Generate Prisma client:
 
 ```bash
@@ -82,16 +77,18 @@ npx prisma generate
 npx prisma db push
 npm run dev
 ```
-
-The backend server should run at:
-
-```txt
-http://localhost:3000
-```
-
 ---
 
-### 3. Frontend Setup
+### 3. Database view with Prisma Studio
+
+Launch Prisma Studio :
+
+```bash
+cd backend
+npx prisma studio
+```
+
+### 4. Frontend Setup
 
 ```bash
 cd frontend
@@ -101,29 +98,11 @@ npm run dev
 
 ---
 
-The frontend should run at:
-
-```txt
-http://localhost:5173
+## Admin Auth
+```text
+username: AroiNearMe
+password: aroiAdmin
 ```
-
----
-
-### 4. Database view with Prisma Studio
-
-Launch Prisma Studio :
-
-```bash
-cd backend
-npx prisma studio
-```
-
-This will open a web interface at.
-```bash
-http://localhost:51212
-```
-You'll see your Menu, Restaurant and Admin table listed on the left.
-
 
 ---
 
